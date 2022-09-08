@@ -144,10 +144,18 @@ export default function SipJS() {
     };
 
     const handleCall = () => {
-        sipCall();
+        try {
+            sipCall();
+        } catch (error) {
+            console.log(error);
+        }
     };
     const handleHangUp = () => {
-        newSession.terminate();
+        try {
+            newSession.terminate();
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleAcceptCall = () => {
@@ -188,12 +196,12 @@ export default function SipJS() {
                 </div>
                 <div className="flex m-4 flex-col w-full max-w-full h-[calc(100%-30px)]">
                     <div className="flex flex-1 h-1/2 w-full drop-shadow-xl self-center items-center justify-center mb-2">
-                        <div className="flex h-full items-center justify-center rounded-2xl">
+                        <div className="flex h-full items-center justify-center rounded-2xl animate__animated animate__zoomIn">
                             <video autoPlay playsInline ref={localVideoRef} className="w-full h-full rounded-2xl hidden" muted></video>
                         </div>
                     </div>
                     <div className="flex flex-1 h-1/2 w-full drop-shadow-xl self-center items-center justify-center">
-                        <div className="flex h-full items-center justify-center rounded-2xl">
+                        <div className="flex h-full items-center justify-center rounded-2xl animate__animated animate__zoomIn">
                             <video autoPlay playsInline ref={remoteVideoRef} className="w-full h-full rounded-2xl hidden"></video>
                         </div>
                     </div>

@@ -1,8 +1,10 @@
 import Head from "next/head";
 import { useEffect, useState, useRef } from "react";
 import JsSIP from "jssip";
-import { Modal, Button } from "react-daisyui";
+
 import InputSip from "./InputSip";
+import ViewVideo from "./ViewVideo";
+import IncomingCall from "./IncomingCall";
 
 let userAgent = null;
 let newSession = null;
@@ -195,44 +197,9 @@ export default function SipJS() {
                     <div ref={callDetailRef}></div>
                     <progress className="progress w-full" value={100} ref={statusBarRef} />
                 </div>
-                <div className="flex m-4 flex-col w-full max-w-full h-[calc(100%-30px)]">
-                    <div className="flex flex-1 h-1/2 w-full self-center items-center justify-center pb-2">
-                        <div className="flex h-full items-center justify-center rounded-2xl animate__animated animate__zoomIn ">
-                            <video
-                                autoPlay
-                                playsInline
-                                ref={localVideoRef}
-                                className="w-full h-full rounded-2xl hidden shadow-lg drop-shadow-lg"
-                                muted
-                            ></video>
-                        </div>
-                    </div>
-                    <div className="flex flex-1 h-1/2 w-full self-center items-center justify-center pt-2">
-                        <div className="flex h-full items-center justify-center rounded-2xl animate__animated animate__zoomIn ">
-                            <video
-                                autoPlay
-                                playsInline
-                                ref={remoteVideoRef}
-                                className="w-full h-full rounded-2xl hidden shadow-lg drop-shadow-lg"
-                            ></video>
-                        </div>
-                    </div>
-                </div>
+                <ViewVideo localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef} />
             </div>
-            <Modal open={isIncoming}>
-                <Modal.Header className="font-bold">Incoming Call</Modal.Header>
-
-                {/* <Modal.Body>You've been selected for a chance to get one year of subscription to use Wikipedia for free!</Modal.Body> */}
-
-                <Modal.Actions>
-                    <Button onClick={handleDeclineCall} color="error">
-                        Decline
-                    </Button>
-                    <Button onClick={handleAcceptCall} color="success">
-                        Accept
-                    </Button>
-                </Modal.Actions>
-            </Modal>
+            <IncomingCall isIncoming={isIncoming} handleAcceptCall={handleAcceptCall} handleDeclineCall={handleDeclineCall} />
         </>
     );
 }

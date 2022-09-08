@@ -5,7 +5,7 @@ export default function Home() {
     return (
         <>
             <Head>
-                <title>ทดสอบ Sip</title>
+                <title>ทดสอบ SIP</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Jssip />

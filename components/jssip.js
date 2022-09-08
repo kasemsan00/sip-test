@@ -12,6 +12,7 @@ export default function SipJS() {
     const callDetailRef = useRef(null);
     const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
+    const statusBarRef = useRef(null);
 
     const [registerDetail, setRegisterDetail] = useState({
         server: "test-135-sip.ttrs.in.th",
@@ -47,7 +48,8 @@ export default function SipJS() {
                 ...prevState,
                 isRegister: true,
             }));
-            registerDetailRef.current.innerText = "REGISTER";
+            statusBarChange("progress-success");
+            // registerDetailRef.current.innerText = "REGISTER";
         });
         ua.on("unregistered", function (e) {
             console.log(e);
@@ -153,6 +155,11 @@ export default function SipJS() {
         }));
     };
 
+    const statusBarChange = (status) => {
+        console.log(status);
+        statusBarRef.current.className = "progress w-full " + status;
+    };
+
     return (
         <>
             <Head>
@@ -231,7 +238,7 @@ export default function SipJS() {
                     </button>
                     <div ref={registerDetailRef}></div>
                     <div ref={callDetailRef}></div>
-                    <Progress className="w-full" color="ghost" value={100} />
+                    <progress className="progress w-full" value={100} ref={statusBarRef} />
                 </div>
                 <div className="flex flex-1 m-2 flex-col h-[calc(50vh-100px)]">
                     <video

@@ -125,6 +125,7 @@ export default function SipJS() {
         callDetailRef.current.innerText = "Call" + " " + registerDetail.destination;
         var session = userAgent.call("sip:" + registerDetail.destination + "@" + registerDetail.server, options);
         session.connection.addEventListener("addstream", (event) => {
+            console.log(event);
             remoteVideoRef.current.srcObject = event.stream;
             remoteVideoRef.current.classList.remove("hidden");
         });

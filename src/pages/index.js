@@ -1,11 +1,11 @@
 import Head from "next/head";
-import Jssip from "../components/jssip";
+import Jssip from "../components/Jssip";
 
 export default function Home() {
     return (
         <>
             <Head>
-                <title>Create Next App</title>
+                <title>ทดสอบ Sip</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Jssip />

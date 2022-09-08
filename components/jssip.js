@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState, useRef } from "react";
 import JsSIP from "jssip";
-import { Modal, Button, Form, InputGroup, Input } from "react-daisyui";
+import { Modal, Button, Form, InputGroup, Input, Progress } from "react-daisyui";
 import DialerSipIcon from "@mui/icons-material/DialerSip";
 
 let ua = null;
@@ -18,6 +18,7 @@ export default function SipJS() {
         websocket: "wss://test-135-sip.ttrs.in.th:443/ws",
         extension: "User2",
         password: "test1234",
+        isRegister: false,
     });
     const [destination, setDestination] = useState("");
     const [isIncoming, setIsIncoming] = useState(false);
@@ -42,7 +43,10 @@ export default function SipJS() {
         ua = new JsSIP.UA(configuration);
         ua.start();
         ua.on("registered", function (e) {
-            console.log(e);
+            setRegisterDetail((prevState) => ({
+                ...prevState,
+                isRegister: true,
+            }));
             registerDetailRef.current.innerText = "REGISTER";
         });
         ua.on("unregistered", function (e) {
@@ -143,7 +147,6 @@ export default function SipJS() {
     };
 
     const handleRegisterDetailChange = (type, value) => {
-        console.log(type, value);
         setRegisterDetail((prevState) => ({
             ...prevState,
             [type]: value,
@@ -158,33 +161,56 @@ export default function SipJS() {
             {/* server: "test-135-sip.ttrs.in.th", websocket: "wss://test-135-sip.ttrs.in.th:443/ws", extension: "User2", password: "test1234", */}
             <div className="flex flex-1 flex-row">
                 <div className="flex flex-1 m-3 flex-col items-center self-center">
-                    <Input
-                        className="w-full"
-                        value={registerDetail.server}
-                        onChange={(event) => handleRegisterDetailChange("server", event.target.value)}
-                        placeholder="server"
-                    />
-                    <Input
-                        className="w-full"
-                        value={registerDetail.websocket}
-                        onChange={(event) => handleRegisterDetailChange("websocket", event.target.value)}
-                        placeholder="websocket"
-                    />
-                    <Input
-                        className="w-full"
-                        value={registerDetail.extension}
-                        onChange={(event) => handleRegisterDetailChange("extension", event.target.value)}
-                        placeholder="extension"
-                    />
-                    <Input
-                        className="w-full"
-                        value={registerDetail.password}
-                        onChange={(event) => handleRegisterDetailChange("password", event.target.value)}
-                        placeholder="password"
-                    />
-                    <button className="btn btn-info w-full" onClick={handleRegister}>
+                    <div className="w-full text-4xl">Register Detail</div>
+                    <div className="form-control w-full ">
+                        <label className="label">
+                            <span className="label-text">Domain</span>
+                        </label>
+                        <Input
+                            className="w-full"
+                            value={registerDetail.server}
+                            onChange={(event) => handleRegisterDetailChange("server", event.target.value)}
+                            placeholder="server"
+                        />
+                    </div>
+                    <div className="form-control w-full ">
+                        <label className="label">
+                            <span className="label-text">Websocket</span>
+                        </label>
+                        <Input
+                            className="w-full"
+                            value={registerDetail.websocket}
+                            onChange={(event) => handleRegisterDetailChange("websocket", event.target.value)}
+                            placeholder="websocket"
+                        />
+                    </div>
+                    <div className="form-control w-full ">
+                        <label className="label">
+                            <span className="label-text">Extension</span>
+                        </label>
+                        <Input
+                            className="w-full"
+                            value={registerDetail.extension}
+                            onChange={(event) => handleRegisterDetailChange("extension", event.target.value)}
+                            placeholder="extension"
+                        />
+                    </div>
+                    <div className="form-control w-full ">
+                        <label className="label">
+                            <span className="label-text">Password</span>
+                        </label>
+                        <Input
+                            className="w-full"
+                            value={registerDetail.password}
+                            onChange={(event) => handleRegisterDetailChange("password", event.target.value)}
+                            placeholder="password"
+                        />
+                    </div>
+
+                    <button className="btn btn-info w-full m-2" disabled={registerDetail.isRegister} onClick={handleRegister}>
                         Register
                     </button>
+                    <div className="w-full text-4xl mt-5">Call</div>
                     <Form className="w-full">
                         <InputGroup className="w-full">
                             <span>
@@ -200,25 +226,26 @@ export default function SipJS() {
                             />
                         </InputGroup>
                     </Form>
-                    <button className="btn btn-warning w-full" onClick={handleCall}>
+                    <button className="btn btn-warning w-full m-2" onClick={handleCall}>
                         Call
                     </button>
                     <div ref={registerDetailRef}></div>
                     <div ref={callDetailRef}></div>
+                    <Progress className="w-full" color="ghost" value={100} />
                 </div>
-                <div className="flex flex-2 m-3 flex-col h-[calc(50vh-100px)]">
+                <div className="flex flex-1 m-2 flex-col h-[calc(50vh-100px)]">
                     <video
                         autoPlay
                         playsInline
                         ref={localVideoRef}
-                        className="flex flex-1 w-full m-3 drop-shadow-xl items-center self-center rounded-2xl bg-black"
+                        className="flex flex-1 w-full m-3 drop-shadow-xl items-center self-center rounded-2xl bg-gray-800"
                         muted
                     ></video>
                     <video
                         autoPlay
                         playsInline
                         ref={remoteVideoRef}
-                        className="flex flex-1 w-full m-3 drop-shadow-xl items-center self-center rounded-2xl bg-black"
+                        className="flex flex-1 w-full m-3 drop-shadow-xl items-center self-center rounded-2xl bg-gray-800"
                     ></video>
                 </div>
             </div>

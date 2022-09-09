@@ -174,7 +174,10 @@ export default function SipJS() {
     const handleAcceptCall = () => {
         console.log(newSession);
         newSession.answer({
-            mediaConstraints: { audio: false, video: false },
+            mediaConstraints: { audio: true, video: true },
+            pcConfig: {
+                iceServers: [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }],
+            },
         });
         setIsIncoming(false);
     };

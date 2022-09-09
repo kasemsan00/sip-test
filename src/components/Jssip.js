@@ -7,10 +7,23 @@ import IncomingCall from "./IncomingCall";
 
 let userAgent = null;
 let newSession = null;
+// iceServers: [
+//     {
+//         urls: [
+//             "stun:stun.l.google.com:19302",
+//             "stun:stun1.l.google.com:19302",
+//             "stun:stun2.l.google.com:19302",
+//             "stun:stun3.l.google.com:19302",
+//             "stun:stun4.l.google.com:19302",
+//         ],
+//     },
+// ],
+// iceServers: [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }],
 const mediaConstraints = { audio: true, video: true };
 const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
 
 export default function SipJS() {
+    const callOutRef = useRef(null);
     const callDetailRef = useRef(null);
     const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
@@ -97,6 +110,7 @@ export default function SipJS() {
     const sipCall = () => {
         var eventHandlers = {
             progress: function (e) {
+                callOutRef.current.innerText = "Call " + registerDetail.destination;
                 console.log("call is in progress");
             },
             failed: function (e) {
@@ -110,23 +124,12 @@ export default function SipJS() {
             },
             confirmed: function (e) {
                 console.log("call confirmed");
+                callDetailRef.current.innerText = "";
+                callOutRef.current.innerText = "";
                 localVideoRef.current.srcObject = session.connection.getLocalStreams()[0];
                 localVideoRef.current.classList.remove("hidden");
             },
         };
-
-        // iceServers: [
-        //     {
-        //         urls: [
-        //             "stun:stun.l.google.com:19302",
-        //             "stun:stun1.l.google.com:19302",
-        //             "stun:stun2.l.google.com:19302",
-        //             "stun:stun3.l.google.com:19302",
-        //             "stun:stun4.l.google.com:19302",
-        //         ],
-        //     },
-        // ],
-        // iceServers: [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }],
 
         var options = {
             eventHandlers: eventHandlers,
@@ -136,7 +139,6 @@ export default function SipJS() {
             },
         };
 
-        callDetailRef.current.innerText = "Call" + " " + registerDetail.destination;
         var session = userAgent.call("sip:" + registerDetail.destination + "@" + registerDetail.server, options);
         session.connection.addEventListener("addstream", (event) => {
             console.log(event);
@@ -160,6 +162,7 @@ export default function SipJS() {
 
     const handleCall = () => {
         try {
+            callOutRef.current.innerText = "Call " + registerDetail.destination;
             sipCall();
         } catch (error) {
             console.log(error);
@@ -214,7 +217,12 @@ export default function SipJS() {
                     <div ref={callDetailRef}></div>
                     <progress className="progress w-full" value={100} ref={statusBarRef} />
                 </div>
-                <ViewVideo localVideoRef={localVideoRef} remoteVideoRef={remoteVideoRef} />
+                <ViewVideo
+                    destination={registerDetail.destination}
+                    callOutRef={callOutRef}
+                    localVideoRef={localVideoRef}
+                    remoteVideoRef={remoteVideoRef}
+                />
             </div>
             <IncomingCall isIncoming={isIncoming} handleAcceptCall={handleAcceptCall} handleDeclineCall={handleDeclineCall} />
         </>

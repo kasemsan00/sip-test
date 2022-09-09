@@ -41,7 +41,7 @@ export default function SipInput({ registerDetail, handleRegister, handleUnRegis
                     disabled={registerDetail.isRegister}
                 />
             </div>
-            <div className="form-control w-full ">
+            <div className="form-control w-full mb-2">
                 <label className="label">
                     <span className="label-text">Password</span>
                 </label>
@@ -53,7 +53,6 @@ export default function SipInput({ registerDetail, handleRegister, handleUnRegis
                     disabled={registerDetail.isRegister}
                 />
             </div>
-
             <button className="btn btn-info w-full m-2" disabled={registerDetail.isRegister} onClick={handleRegister}>
                 Register
             </button>
@@ -61,7 +60,7 @@ export default function SipInput({ registerDetail, handleRegister, handleUnRegis
                 Unregister
             </button>
             <div className="w-full text-3xl mt-5">Call</div>
-            <Form className="w-full">
+            <Form className="w-full mb-2">
                 <InputGroup className="w-full">
                     <span>
                         <DialerSipIcon />

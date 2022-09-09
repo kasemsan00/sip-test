@@ -20,12 +20,12 @@ import IncomingCall from "./IncomingCall";
 let userAgent = null;
 let newSession = null;
 const mediaConstraints = { audio: true, video: true };
-// const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
-const iceServers = [
-    {
-        urls: ["stun:turn.ttrs.in.th"],
-    },
-];
+const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
+// const iceServers = [
+//     {
+//         urls: ["stun:turn.ttrs.in.th"],
+//     },
+// ];
 
 export default function SipJS() {
     const callOutRef = useRef(null);

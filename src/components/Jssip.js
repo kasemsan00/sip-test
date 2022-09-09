@@ -22,7 +22,6 @@ export default function SipJS() {
         isRegister: false,
         destination: "9999",
     });
-    const [destination, setDestination] = useState("");
     const [isIncoming, setIsIncoming] = useState(false);
 
     useEffect(() => {
@@ -48,14 +47,11 @@ export default function SipJS() {
                 isRegister: true,
             }));
             statusBarChange("progress-success");
-            // registerDetailRef.current.innerText = "REGISTER";
         });
         userAgent.on("unregistered", function (e) {
             console.log(e);
         });
-        userAgent.on("registrationFailed", function (e) {
-            // registerDetailRef.current.innerText = e.cause;
-        });
+        userAgent.on("registrationFailed", function (e) {});
 
         userAgent.on("newRTCSession", function (ev1) {
             console.log(" *** newRTCSession", ev1.originator, ev1.request.method, ev1);
@@ -117,16 +113,6 @@ export default function SipJS() {
             },
         };
 
-        // stun google
-        // {
-        // urls: [
-        //     "stun:stun.l.google.com:19302",
-        //     "stun:stun1.l.google.com:19302",
-        //     "stun:stun2.l.google.com:19302",
-        //     "stun:stun3.l.google.com:19302",
-        //     "stun:stun4.l.google.com:19302",
-        // ],
-        // },
         // iceServers: [
         //     {
         //         urls: [

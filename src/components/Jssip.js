@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useEffect, useState, useRef } from "react";
 import JsSIP from "jssip";
 
@@ -10,7 +9,6 @@ let userAgent = null;
 let newSession = null;
 
 export default function SipJS() {
-    // const registerDetailRef = useRef(null);
     const callDetailRef = useRef(null);
     const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
@@ -122,6 +120,11 @@ export default function SipJS() {
         var options = {
             eventHandlers: eventHandlers,
             mediaConstraints: { audio: true, video: true },
+            pcConfig: {
+                iceServers: [
+                    { urls: ["stun:stun.l.google.com:19302", "stun1.l.google.com:19302", "stun3.l.google.com:19302", "stun4.l.google.com:19302"] },
+                ],
+            },
         };
 
         callDetailRef.current.innerText = "Call" + " " + registerDetail.destination;

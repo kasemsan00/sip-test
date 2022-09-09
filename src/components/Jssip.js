@@ -7,6 +7,8 @@ import IncomingCall from "./IncomingCall";
 
 let userAgent = null;
 let newSession = null;
+const mediaConstraints = { audio: true, video: true };
+const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
 
 export default function SipJS() {
     const callDetailRef = useRef(null);
@@ -128,9 +130,9 @@ export default function SipJS() {
 
         var options = {
             eventHandlers: eventHandlers,
-            mediaConstraints: { audio: true, video: true },
+            mediaConstraints: mediaConstraints,
             pcConfig: {
-                iceServers: [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }],
+                iceServers: iceServers,
             },
         };
 
@@ -174,9 +176,9 @@ export default function SipJS() {
     const handleAcceptCall = () => {
         console.log(newSession);
         newSession.answer({
-            mediaConstraints: { audio: true, video: true },
+            mediaConstraints: mediaConstraints,
             pcConfig: {
-                iceServers: [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }],
+                iceServers: iceServers,
             },
         });
         setIsIncoming(false);

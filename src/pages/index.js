@@ -1,5 +1,10 @@
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import Head from "next/head";
-import Jssip from "../components/Jssip";
+
+const DynamicJssip = dynamic(() => import("../components/Jssip"), {
+    suspense: true,
+});
 
 export default function Home() {
     return (
@@ -8,7 +13,9 @@ export default function Home() {
                 <title>SipWebRTC Demo</title>
                 <link rel="icon" href="/favicon.png" />
             </Head>
-            <Jssip />
+            <Suspense fallback={`Loading...`}>
+                <DynamicJssip />
+            </Suspense>
         </>
     );
 }

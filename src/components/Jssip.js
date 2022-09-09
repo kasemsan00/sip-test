@@ -132,7 +132,7 @@ export default function SipJS() {
             eventHandlers: eventHandlers,
             mediaConstraints: { audio: true, video: true },
             pcConfig: {
-                iceServers: [{ urls: "turn:turn.ttrs.in.th", username: "turn01", credential: "Test1234" }],
+                iceServers: [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }],
             },
         };
 

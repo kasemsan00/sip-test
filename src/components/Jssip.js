@@ -114,6 +114,7 @@ export default function SipJS() {
                 console.log("call is in progress");
             },
             failed: function (e) {
+                callOutRef.current.innerText = e.cause;
                 callDetailRef.current.innerText = e.cause;
                 console.log("call failed with cause: " + e);
             },

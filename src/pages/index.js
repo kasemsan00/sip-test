@@ -5,8 +5,8 @@ export default function Home() {
     return (
         <>
             <Head>
-                <title>ทดสอบ SIP</title>
-                <link rel="icon" href="/favicon.ico" />
+                <title>SipWebRTC Demo</title>
+                <link rel="icon" href="/favicon.png" />
             </Head>
             <Jssip />
         </>

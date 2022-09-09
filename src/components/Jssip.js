@@ -5,8 +5,6 @@ import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
 
-let userAgent = null;
-let newSession = null;
 // iceServers: [
 //     {
 //         urls: [
@@ -19,8 +17,21 @@ let newSession = null;
 //     },
 // ],
 // iceServers: [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }],
+let userAgent = null;
+let newSession = null;
 const mediaConstraints = { audio: true, video: true };
-const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
+// const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
+const iceServers = [
+    {
+        urls: [
+            "stun:stun.l.google.com:19302",
+            "stun:stun1.l.google.com:19302",
+            "stun:stun2.l.google.com:19302",
+            "stun:stun3.l.google.com:19302",
+            "stun:stun4.l.google.com:19302",
+        ],
+    },
+];
 
 export default function SipJS() {
     const callOutRef = useRef(null);
@@ -92,7 +103,6 @@ export default function SipJS() {
                 // onaddstream
                 ev2.peerconnection.onaddstream = function (event) {
                     console.log(ev1);
-                    // localVideoRef.current.srcObject = newSession.getLocalStreams()[0];
                     remoteVideoRef.current.srcObject = event.stream;
                     remoteVideoRef.current.classList.remove("hidden");
                 };

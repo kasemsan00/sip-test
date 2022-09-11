@@ -4,7 +4,7 @@ import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
 import { useSelector } from "react-redux";
-// import adapter from "webrtc-adapter";
+import adapter from "webrtc-adapter";
 
 // iceServers: [
 //     {
@@ -17,11 +17,13 @@ import { useSelector } from "react-redux";
 //         ],
 //     },
 // ],
-// iceServers: [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }],
 let userAgent = null;
 let newSession = null;
-const mediaConstraints = { audio: true, video: true };
 const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
+const pcConfig = {
+    iceServers: iceServers,
+    sdpSemantics: "unified-plan",
+};
 
 export default function SipJS() {
     const mediaStream = useSelector((state) => state.mediaStream);
@@ -170,10 +172,7 @@ export default function SipJS() {
         var options = {
             eventHandlers: eventHandlers,
             mediaStream: mediaStream,
-            pcConfig: {
-                bundlePolicy: "max-bundle",
-                iceServers: iceServers,
-            },
+            pcConfig: pcConfig,
         };
 
         var session = userAgent.call("sip:" + registerDetail.destination + "@" + registerDetail.server, options);
@@ -213,10 +212,8 @@ export default function SipJS() {
     const handleAcceptCall = (callID) => {
         const _incomingCall = incomingCall.find((incoming) => incoming.call_id === callID);
         _incomingCall.session.session.answer({
-            mediaConstraints: mediaConstraints,
-            pcConfig: {
-                iceServers: iceServers,
-            },
+            mediaStream: mediaStream,
+            pcConfig: pcConfig,
         });
         _incomingCall.view = false;
 
@@ -237,10 +234,7 @@ export default function SipJS() {
     };
 
     const handleRegisterDetailChange = (type, value) => {
-        setRegisterDetail((prevState) => ({
-            ...prevState,
-            [type]: value,
-        }));
+        setRegisterDetail((prevState) => ({ ...prevState, [type]: value }));
     };
 
     const statusBarChange = (status) => {
@@ -249,9 +243,7 @@ export default function SipJS() {
 
     const handleMuteVideo = (muted) => {
         if (muted) {
-            newSession.mute({
-                video: true,
-            });
+            newSession.mute({ video: true });
         } else if (!muted) {
             newSession.unmute({ video: true });
         }
@@ -259,9 +251,7 @@ export default function SipJS() {
     const handleMutedMicrophone = (muted) => {
         console.log("handleMutedMicrophone");
         if (muted) {
-            newSession.mute({
-                audio: true,
-            });
+            newSession.mute({ audio: true });
         } else if (!muted) {
             newSession.unmute({ audio: true });
         }

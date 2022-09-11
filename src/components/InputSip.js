@@ -1,7 +1,15 @@
 import { Form, InputGroup, Input } from "react-daisyui";
 import DialerSipIcon from "@mui/icons-material/DialerSip";
 
-export default function SipInput({ registerDetail, handleRegister, handleUnRegister, handleRegisterDetailChange, handleCall, handleHangUp }) {
+export default function SipInput({
+    registerDetail,
+    isRegister,
+    handleRegister,
+    handleUnRegister,
+    handleRegisterDetailChange,
+    handleCall,
+    handleHangUp,
+}) {
     return (
         <>
             <div className="form-control w-full ">
@@ -14,7 +22,7 @@ export default function SipInput({ registerDetail, handleRegister, handleUnRegis
                     value={registerDetail.server}
                     onChange={(event) => handleRegisterDetailChange("server", event.target.value)}
                     placeholder="server"
-                    disabled={registerDetail.isRegister}
+                    disabled={isRegister}
                 />
             </div>
             <div className="form-control w-full ">
@@ -27,7 +35,7 @@ export default function SipInput({ registerDetail, handleRegister, handleUnRegis
                     value={registerDetail.websocket}
                     onChange={(event) => handleRegisterDetailChange("websocket", event.target.value)}
                     placeholder="websocket"
-                    disabled={registerDetail.isRegister}
+                    disabled={isRegister}
                 />
             </div>
             <div className="form-control w-full ">
@@ -40,7 +48,7 @@ export default function SipInput({ registerDetail, handleRegister, handleUnRegis
                     value={registerDetail.extension}
                     onChange={(event) => handleRegisterDetailChange("extension", event.target.value)}
                     placeholder="extension"
-                    disabled={registerDetail.isRegister}
+                    disabled={isRegister}
                 />
             </div>
             <div className="form-control w-full mb-2">
@@ -53,13 +61,13 @@ export default function SipInput({ registerDetail, handleRegister, handleUnRegis
                     value={registerDetail.password}
                     onChange={(event) => handleRegisterDetailChange("password", event.target.value)}
                     placeholder="password"
-                    disabled={registerDetail.isRegister}
+                    disabled={isRegister}
                 />
             </div>
-            <button className="btn btn-info w-full m-2" disabled={registerDetail.isRegister} onClick={handleRegister}>
+            <button className="btn btn-info w-full m-2" disabled={isRegister} onClick={handleRegister}>
                 Register
             </button>
-            <button className="btn btn-error w-full m-2" disabled={!registerDetail.isRegister} onClick={handleUnRegister}>
+            <button className="btn btn-error w-full m-2" disabled={!isRegister} onClick={handleUnRegister}>
                 Unregister
             </button>
             <Form className="w-full mb-2">

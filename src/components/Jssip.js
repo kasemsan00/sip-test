@@ -32,9 +32,9 @@ export default function SipJS() {
         websocket: "wss://test-135-sip.ttrs.in.th:443/ws",
         extension: "User2",
         password: "test1234",
-        isRegister: false,
         destination: "9999",
     });
+    const [isRegister, setIsRegister] = useState(false);
     const [incomingCall, setIncomingCall] = useState([]);
     const [localVideoStatus, setLocalVideoStatus] = useState({ video: false, audio: false });
 
@@ -56,13 +56,11 @@ export default function SipJS() {
         userAgent = new JsSIP.UA(configuration);
         userAgent.start();
         userAgent.on("registered", function (e) {
-            setRegisterDetail((prevState) => ({
-                ...prevState,
-                isRegister: true,
-            }));
+            setIsRegister(true);
             statusBarChange("bg-green-500");
         });
         userAgent.on("unregistered", function (e) {
+            setIsRegister(false);
             statusBarChange("bg-red-500");
             console.log(e);
         });
@@ -86,12 +84,13 @@ export default function SipJS() {
                 ]);
             }
             newSession.on("ended", (event) => {
-                console.log("ended", event, );
+                console.log("ended", event);
             });
             newSession.on("confirmed", function () {
                 console.log("add localVideo");
                 localVideoRef.current.srcObject = newSession.connection.getLocalStreams()[0];
                 localVideoRef.current.classList.remove("hidden");
+                callOutRef.current.classList.replace("fixed", "hidden");
             });
             newSession.on("muted", function (event) {
                 if (event.video) {
@@ -192,26 +191,24 @@ export default function SipJS() {
 
     const handleUnRegister = () => {
         userAgent.stop();
-        setRegisterDetail((prevState) => ({
-            ...prevState,
-            isRegister: false,
-        }));
     };
 
     const handleCall = () => {
         try {
+            localStorage.setItem("destination", JSON.stringify(registerDetail));
             callOutRef.current.innerText = "Call " + registerDetail.destination;
+            callOutRef.current.classList.replace("hidden", "fixed");
             sipCall();
         } catch (error) {
             console.log(error);
         }
     };
-    const handleHangUp = () => {
-        try {
-            newSession.terminate();
-        } catch (error) {
-            console.log(error);
-        }
+    const handleHangUp = async () => {
+        incomingCall.forEach((incoming) => {
+            incoming.session.session.terminate();
+        });
+        localVideoRef.current.classList.add("hidden");
+        remoteVideoRef.current.classList.add("hidden");
     };
 
     const handleAcceptCall = (callID) => {
@@ -273,10 +270,11 @@ export default function SipJS() {
 
     return (
         <>
-            <div className="flex flex-row w-screen h-screen  bg-slate-200">
-                <div className="flex w-1/4 min-w-[250px] mx-3 flex-col items-center self-start">
+            <div className="flex flex-row w-screen h-screen bg-slate-200 ">
+                <div className="flex w-1/4 min-w-[250px] px-3 h-full flex-col items-center self-start shadow-lg">
                     <InputSip
                         registerDetail={registerDetail}
+                        isRegister={isRegister}
                         handleRegister={handleRegister}
                         handleUnRegister={handleUnRegister}
                         handleRegisterDetailChange={handleRegisterDetailChange}

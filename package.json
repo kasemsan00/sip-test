@@ -21,7 +21,8 @@
         "react-dom": "^18.2.0",
         "react-player": "^2.10.1",
         "react-redux": "^8.0.2",
-        "sip.js": "^0.20.0"
+        "sip.js": "^0.20.0",
+        "webrtc-adapter": "^8.1.2"
     },
     "name": "testsip-next",
     "description": "This is a starter template for [Learn Next.js](https://nextjs.org/learn).",

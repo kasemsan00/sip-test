@@ -5,15 +5,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import CallEndIcon from "@mui/icons-material/CallEnd";
 
-export default function ViewVideo({
-    isVideoMuted,
-    isMicrophoneMuted,
-    handleMuteVideo,
-    handleMutedMicrophone,
-    callOutRef,
-    localVideoRef,
-    remoteVideoRef,
-}) {
+export default function ViewVideo({ isVideoMuted, isMicrophoneMuted, handleMuteVideo, handleMutedMicrophone, callOutRef, remoteVideoRef }) {
     const controlLocalRef = useRef(null);
     const controlRemoteRef = useRef(null);
 
@@ -23,7 +15,7 @@ export default function ViewVideo({
                 className="hidden top-[40%] justify-center items-center text-6xl bg-gray-800 text-white p-3 rounded-xl shadow-md"
                 ref={callOutRef}
             ></div>
-            <div className="flex flex-1 h-1/2 w-full self-center items-center justify-center pb-2">
+            {/* <div className="flex flex-1 h-1/2 w-full self-center items-center justify-center pb-2">
                 <div
                     className="flex h-full items-center justify-center rounded-2xl animate__animated animate__zoomIn"
                     onMouseOver={() => {
@@ -41,10 +33,9 @@ export default function ViewVideo({
                             {!isMicrophoneMuted ? <MicIcon fontSize="large" /> : <MicOffIcon fontSize="large" color="error" />}
                         </div>
                     </div>
-                    <video autoPlay playsInline ref={localVideoRef} className="w-full h-full rounded-2xl hidden" muted></video>
                 </div>
-            </div>
-            <div className="flex flex-1 h-1/2 w-full self-center items-center justify-center pt-2">
+            </div> */}
+            <div className="flex flex-1 h-full w-full self-center items-center justify-center m-20 ">
                 <div
                     className="flex h-full items-center justify-center rounded-2xl animate__animated animate__zoomIn"
                     onMouseOver={() => {

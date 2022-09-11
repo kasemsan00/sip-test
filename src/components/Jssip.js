@@ -4,6 +4,7 @@ import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
 import { useSelector } from "react-redux";
+// import adapter from "webrtc-adapter";
 
 // iceServers: [
 //     {
@@ -25,7 +26,6 @@ const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "tur
 export default function SipJS() {
     const mediaStream = useSelector((state) => state.mediaStream);
     const callOutRef = useRef(null);
-    const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
     const statusBarRef = useRef(null);
 
@@ -90,7 +90,6 @@ export default function SipJS() {
             });
             newSession.on("confirmed", function () {
                 console.log("add localVideo");
-                localVideoRef.current.classList.remove("hidden");
                 callOutRef.current.classList.replace("fixed", "hidden");
             });
             newSession.on("muted", function (event) {
@@ -125,7 +124,6 @@ export default function SipJS() {
                 ev2.peerconnection.onremovestream = function (ev3) {
                     remoteVideoRef.current.stop();
                     remoteVideoRef.current.srcObject = null;
-                    localVideoRef.current.srcObject = null;
                 };
             });
         });
@@ -141,17 +139,14 @@ export default function SipJS() {
                 callOutRef.current.innerText = e.cause;
                 console.log("call failed with cause: " + e);
             },
-            ended: (e) => {
-                console.log("call ended with cause: " + e);
-                localVideoRef.current.classList.add("hidden");
+            ended: (event) => {
+                console.log(event);
                 remoteVideoRef.current.classList.add("hidden");
             },
             confirmed: (e) => {
                 console.log("call confirmed");
                 callOutRef.current.innerText = "";
                 console.log("add localVideo");
-                // localVideoRef.current.srcObject = session.connection.getLocalStreams()[0];
-                localVideoRef.current.classList.remove("hidden");
             },
             muted: (e) => {
                 console.log("muted", e);
@@ -176,13 +171,14 @@ export default function SipJS() {
             eventHandlers: eventHandlers,
             mediaStream: mediaStream,
             pcConfig: {
+                bundlePolicy: "max-bundle",
                 iceServers: iceServers,
             },
         };
 
         var session = userAgent.call("sip:" + registerDetail.destination + "@" + registerDetail.server, options);
         session.connection.addEventListener("addstream", (event) => {
-            console.log(event);
+            console.log(event.stream);
             remoteVideoRef.current.srcObject = event.stream;
             remoteVideoRef.current.classList.remove("hidden");
         });
@@ -211,7 +207,6 @@ export default function SipJS() {
         incomingCall.forEach((incoming) => {
             incoming.session.session.terminate();
         });
-        localVideoRef.current.classList.add("hidden");
         remoteVideoRef.current.classList.add("hidden");
     };
 
@@ -293,7 +288,6 @@ export default function SipJS() {
                     handleMutedMicrophone={handleMutedMicrophone}
                     destination={registerDetail.destination}
                     callOutRef={callOutRef}
-                    localVideoRef={localVideoRef}
                     remoteVideoRef={remoteVideoRef}
                 />
             </div>

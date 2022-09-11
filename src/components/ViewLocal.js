@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { setLocalStream } from "../redux/slices/mediaStreamSlice";
+import adapter from "webrtc-adapter";
 
 export default function ViewLocal() {
     const dispatch = useDispatch();
@@ -15,7 +16,7 @@ export default function ViewLocal() {
 
     return (
         <div className="pt-2">
-            <video className="w-full h-[130px] rounded-xl bg-slate-800" autoPlay playsInline ref={localVideoRef} muted></video>
+            <video className="w-full h-[200px] rounded-xl bg-slate-800" autoPlay playsInline ref={localVideoRef} muted></video>
         </div>
     );
 }

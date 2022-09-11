@@ -4,6 +4,7 @@ import JsSIP from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
+import Control from "./Control";
 
 // iceServers: [
 //     {
@@ -43,6 +44,10 @@ export default function SipJS() {
         destination: "9999",
     });
     const [isIncoming, setIsIncoming] = useState(false);
+    const [localVideoStatus, setLocalVideoStatus] = useState({
+        video: true,
+        audio: true,
+    });
 
     useEffect(() => {
         if (localStorage.getItem("registerDetail") !== null) {
@@ -66,9 +71,10 @@ export default function SipJS() {
                 ...prevState,
                 isRegister: true,
             }));
-            statusBarChange("progress-success");
+            statusBarChange("bg-green-500");
         });
         userAgent.on("unregistered", function (e) {
+            statusBarChange("bg-red-500");
             console.log(e);
         });
         userAgent.on("registrationFailed", function (e) {});
@@ -81,14 +87,12 @@ export default function SipJS() {
                 console.log(ev1.originator);
                 setIsIncoming(true);
             }
-            newSession.on("ended", function () {
-                localVideoRef.current.classList.add("hidden");
-                remoteVideoRef.current.classList.add("hidden");
-            });
-            newSession.on("confirmed", function () {
-                localVideoRef.current.srcObject = newSession.connection.getLocalStreams()[0];
-                localVideoRef.current.classList.remove("hidden");
-            });
+            newSession.on("ended", function () {});
+            newSession.on("confirmed", function () {});
+            // newSession.on("muted", function (e) {
+            //     console.log("local mute");
+            //     console.log(e);
+            // });
 
             // peerconnection
             newSession.on("peerconnection", function (ev2) {
@@ -113,26 +117,29 @@ export default function SipJS() {
 
     const sipCall = () => {
         var eventHandlers = {
-            progress: function (e) {
+            progress: (e) => {
                 callOutRef.current.innerText = "Call " + registerDetail.destination;
                 console.log("call is in progress");
             },
-            failed: function (e) {
+            failed: (e) => {
                 callOutRef.current.innerText = e.cause;
                 callDetailRef.current.innerText = e.cause;
                 console.log("call failed with cause: " + e);
             },
-            ended: function (e) {
+            ended: (e) => {
                 console.log("call ended with cause: " + e);
                 localVideoRef.current.classList.add("hidden");
                 remoteVideoRef.current.classList.add("hidden");
             },
-            confirmed: function (e) {
+            confirmed: (e) => {
                 console.log("call confirmed");
                 callDetailRef.current.innerText = "";
                 callOutRef.current.innerText = "";
                 localVideoRef.current.srcObject = session.connection.getLocalStreams()[0];
                 localVideoRef.current.classList.remove("hidden");
+            },
+            muted: (e) => {
+                console.log(e);
             },
         };
 
@@ -204,13 +211,19 @@ export default function SipJS() {
     };
 
     const statusBarChange = (status) => {
-        statusBarRef.current.className = "progress w-full " + status;
+        statusBarRef.current.className = "fixed bottom-0 h-[10px] w-full " + status;
+    };
+
+    const handleMuteVideo = () => {
+        newSession.mute({
+            video: true,
+        });
     };
 
     return (
         <>
             <div className="flex flex-row h-screen w-screen bg-slate-200">
-                <div className="flex w-1/4 m-3 flex-col items-center self-start">
+                <div className="flex w-1/4 min-w-[250px] mx-3 flex-col items-center self-start">
                     <InputSip
                         registerDetail={registerDetail}
                         handleRegister={handleRegister}
@@ -220,16 +233,17 @@ export default function SipJS() {
                         handleHangUp={handleHangUp}
                     />
                     <div ref={callDetailRef}></div>
-                    <progress className="progress w-full" value={100} ref={statusBarRef} />
                 </div>
                 <ViewVideo
+                    handleMuteVideo={handleMuteVideo}
                     destination={registerDetail.destination}
                     callOutRef={callOutRef}
                     localVideoRef={localVideoRef}
                     remoteVideoRef={remoteVideoRef}
                 />
+                <IncomingCall isIncoming={isIncoming} handleAcceptCall={handleAcceptCall} handleDeclineCall={handleDeclineCall} />
             </div>
-            <IncomingCall isIncoming={isIncoming} handleAcceptCall={handleAcceptCall} handleDeclineCall={handleDeclineCall} />
+            <div className="fixed bottom-0 w-full h-[10px] " ref={statusBarRef}></div>
         </>
     );
 }

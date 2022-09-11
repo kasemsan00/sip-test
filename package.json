@@ -12,11 +12,11 @@
         "@mui/icons-material": "^5.10.3",
         "@mui/material": "^5.10.4",
         "animate.css": "^4.1.1",
-        "daisyui": "^2.25.0",
+        "daisyui": "^2.27.0",
         "jssip": "^3.9.1",
         "next": "latest",
         "react": "^18.2.0",
-        "react-daisyui": "^2.4.0",
+        "react-daisyui": "^2.4.1",
         "react-dom": "^18.2.0",
         "react-player": "^2.10.1",
         "sip.js": "^0.20.0"

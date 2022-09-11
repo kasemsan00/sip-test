@@ -1,22 +1,21 @@
 import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { setLocalStream } from "../redux/slices/mediaStreamSlice";
 
 export default function ViewLocal() {
+    const dispatch = useDispatch();
     const localVideoRef = useRef(null);
 
     useEffect(() => {
-        initialLocalCamera();
-    }, []);
-
-    const initialLocalCamera = () => {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-            console.log("stream", stream);
+            dispatch(setLocalStream(stream));
             localVideoRef.current.srcObject = stream;
         });
-    };
+    }, [dispatch]);
 
     return (
         <div className="pt-2">
-            <video className="w-full h-[150px] rounded-xl bg-slate-800" autoPlay playsInline ref={localVideoRef}></video>
+            <video className="w-full h-[130px] rounded-xl bg-slate-800" autoPlay playsInline ref={localVideoRef} muted></video>
         </div>
     );
 }

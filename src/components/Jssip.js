@@ -3,6 +3,7 @@ import JsSIP from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
+import { useSelector } from "react-redux";
 
 // iceServers: [
 //     {
@@ -22,6 +23,7 @@ const mediaConstraints = { audio: true, video: true };
 const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
 
 export default function SipJS() {
+    const mediaStream = useSelector((state) => state.mediaStream);
     const callOutRef = useRef(null);
     const localVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
@@ -88,7 +90,6 @@ export default function SipJS() {
             });
             newSession.on("confirmed", function () {
                 console.log("add localVideo");
-                localVideoRef.current.srcObject = newSession.connection.getLocalStreams()[0];
                 localVideoRef.current.classList.remove("hidden");
                 callOutRef.current.classList.replace("fixed", "hidden");
             });
@@ -107,6 +108,9 @@ export default function SipJS() {
                 if (event.audio) {
                     setLocalVideoStatus((prevState) => ({ ...prevState, audio: false }));
                 }
+            });
+            newSession.on("addstream", (event) => {
+                console.log(event);
             });
             // peerconnection
             newSession.on("peerconnection", function (ev2) {
@@ -146,7 +150,7 @@ export default function SipJS() {
                 console.log("call confirmed");
                 callOutRef.current.innerText = "";
                 console.log("add localVideo");
-                localVideoRef.current.srcObject = session.connection.getLocalStreams()[0];
+                // localVideoRef.current.srcObject = session.connection.getLocalStreams()[0];
                 localVideoRef.current.classList.remove("hidden");
             },
             muted: (e) => {
@@ -170,7 +174,7 @@ export default function SipJS() {
 
         var options = {
             eventHandlers: eventHandlers,
-            mediaConstraints: mediaConstraints,
+            mediaStream: mediaStream,
             pcConfig: {
                 iceServers: iceServers,
             },

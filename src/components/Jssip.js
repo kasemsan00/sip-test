@@ -270,8 +270,8 @@ export default function SipJS() {
 
     return (
         <>
-            <div className="flex flex-row w-screen h-screen bg-slate-200 ">
-                <div className="flex w-1/4 min-w-[250px] px-3 h-full flex-col items-center self-start shadow-lg">
+            <div className="flex flex-row w-screen h-screen bg-slate-200 shadow-xl">
+                <div className="flex w-1/4 min-w-[250px] px-3 h-full flex-col items-center self-start ">
                     <InputSip
                         registerDetail={registerDetail}
                         isRegister={isRegister}
@@ -293,7 +293,7 @@ export default function SipJS() {
                     remoteVideoRef={remoteVideoRef}
                 />
             </div>
-            <div className="fixed flex top-10 w-full justify-center">
+            <div className="fixed flex top-10 w-full justify-center ">
                 <div className="flex flex-col w-1/2">
                     {incomingCall.map((incoming, index) => {
                         return (

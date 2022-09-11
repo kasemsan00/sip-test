@@ -18,9 +18,9 @@ export default function ViewVideo({
     const controlRemoteRef = useRef(null);
 
     return (
-        <div className="flex flex-col w-full max-w-full h-[calc(100%-24px)] pt-2">
+        <div className="flex flex-col w-full max-w-full pt-3 pb-4 bg-slate-500 items-center">
             <div
-                className="hidden top-[40%] left-1/2 justify-center items-center text-6xl bg-gray-800 text-white p-3 rounded-xl shadow-md"
+                className="hidden top-[40%] justify-center items-center text-6xl bg-gray-800 text-white p-3 rounded-xl shadow-md"
                 ref={callOutRef}
             ></div>
             <div className="flex flex-1 h-1/2 w-full self-center items-center justify-center pb-2">

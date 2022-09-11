@@ -1,5 +1,6 @@
 import { Form, InputGroup, Input } from "react-daisyui";
 import DialerSipIcon from "@mui/icons-material/DialerSip";
+import ViewLocal from "./ViewLocal";
 
 export default function SipInput({
     registerDetail,
@@ -12,6 +13,9 @@ export default function SipInput({
 }) {
     return (
         <>
+            <div className="form-control w-full">
+                <ViewLocal />
+            </div>
             <div className="form-control w-full ">
                 <label className="label">
                     <span className="label-text text-xs">Domain</span>

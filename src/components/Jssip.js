@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, createRef } from "react";
 import JsSIP from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
@@ -28,7 +28,6 @@ const pcConfig = {
 export default function SipJS() {
     const mediaStream = useSelector((state) => state.mediaStream);
     const callOutRef = useRef(null);
-    const remoteVideoRef = useRef(null);
     const statusBarRef = useRef(null);
 
     const [registerDetail, setRegisterDetail] = useState({
@@ -40,6 +39,7 @@ export default function SipJS() {
     });
     const [isRegister, setIsRegister] = useState(false);
     const [incomingCall, setIncomingCall] = useState([]);
+    const [remoteVideoRef, setRemoteVideoRef] = useState([]);
     const [localVideoStatus, setLocalVideoStatus] = useState({ video: false, audio: false });
 
     useEffect(() => {
@@ -47,6 +47,16 @@ export default function SipJS() {
             setRegisterDetail(JSON.parse(localStorage.getItem("registerDetail")));
         }
     }, []);
+
+    useEffect(() => {
+        const refVideo = [];
+        incomingCall.forEach((element) => {
+            if (refVideo[element.callID] === undefined) {
+                refVideo[element.callID] = createRef();
+            }
+        });
+        setRemoteVideoRef(refVideo);
+    }, [incomingCall]);
 
     const registerSip = () => {
         console.log("registerSip");
@@ -86,7 +96,22 @@ export default function SipJS() {
                         view: true,
                     },
                 ]);
+            } else if (ev1.originator === "local") {
+                setIncomingCall([
+                    ...incomingCall,
+                    {
+                        callID: ev1.request.call_id,
+                        displayName: ev1.request.from._uri._user,
+                        session: ev1,
+                        view: false,
+                    },
+                ]);
             }
+            newSession.connection.addEventListener("addstream", (event) => {
+                console.log(event);
+                // remoteVideoRef.current.srcObject = event.stream;
+                // remoteVideoRef.current.classList.remove("hidden");
+            });
             newSession.on("ended", (event) => {
                 console.log("ended", event);
             });
@@ -113,19 +138,15 @@ export default function SipJS() {
             newSession.on("addstream", (event) => {
                 console.log(event);
             });
-            // peerconnection
             newSession.on("peerconnection", function (ev2) {
-                // onaddstream
                 ev2.peerconnection.onaddstream = function (event) {
-                    console.log(ev1);
-                    remoteVideoRef.current.srcObject = event.stream;
-                    remoteVideoRef.current.classList.remove("hidden");
+                    console.log(event.stream);
+                    // remoteVideoRef.current.srcObject = event.stream;
+                    // remoteVideoRef.current.classList.remove("hidden");
                 };
-
-                // onremovestream
                 ev2.peerconnection.onremovestream = function (ev3) {
-                    remoteVideoRef.current.stop();
-                    remoteVideoRef.current.srcObject = null;
+                    // remoteVideoRef.current.stop();
+                    // remoteVideoRef.current.srcObject = null;
                 };
             });
         });
@@ -146,7 +167,7 @@ export default function SipJS() {
                 remoteVideoRef.current.classList.add("hidden");
             },
             confirmed: (e) => {
-                console.log("call confirmed");
+                console.log("call confirmed", e);
                 callOutRef.current.innerText = "";
                 console.log("add localVideo");
             },
@@ -177,9 +198,9 @@ export default function SipJS() {
 
         var session = userAgent.call("sip:" + registerDetail.destination + "@" + registerDetail.server, options);
         session.connection.addEventListener("addstream", (event) => {
-            console.log(event.stream);
-            remoteVideoRef.current.srcObject = event.stream;
-            remoteVideoRef.current.classList.remove("hidden");
+            // console.log(session.connection);
+            // remoteVideoRef.current.srcObject = event.stream;
+            // remoteVideoRef.current.classList.remove("hidden");
         });
     };
 
@@ -262,7 +283,7 @@ export default function SipJS() {
 
     return (
         <>
-            <div className="flex flex-row w-screen h-screen bg-slate-200 shadow-xl">
+            <div className="flex flex-row w-screen h-screen bg-slate-200 shadow-xl overflow-hidden">
                 <div className="flex w-1/4 min-w-[250px] px-3 h-full flex-col items-center self-start ">
                     <InputSip
                         registerDetail={registerDetail}
@@ -278,7 +299,7 @@ export default function SipJS() {
                         handleMutedMicrophone={handleMutedMicrophone}
                     />
                 </div>
-                <ViewVideo callOutRef={callOutRef} remoteVideoRef={remoteVideoRef} />
+                <ViewVideo callOutRef={callOutRef} incomingCall={incomingCall} remoteVideoRef={remoteVideoRef} />
             </div>
             <div className="fixed flex top-10 w-full justify-center ">
                 <div className="flex flex-col w-1/2">

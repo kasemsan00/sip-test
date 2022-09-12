@@ -16,7 +16,7 @@ export default function SipInput({
     handleMutedMicrophone,
 }) {
     return (
-        <>
+        <div className="flex w-1/4 min-w-[250px] px-3 h-full flex-col items-center self-start ">
             <div className="form-control w-full">
                 <ViewLocal
                     isVideoMuted={isVideoMuted}
@@ -104,6 +104,6 @@ export default function SipInput({
             <button className="btn btn-warning w-full m-2" onClick={handleHangUp}>
                 HangUp
             </button>
-        </>
+        </div>
     );
 }

@@ -38,8 +38,8 @@ export default function SipJS() {
         destination: "9999",
     });
     const [isRegister, setIsRegister] = useState(false);
-    const [incomingCall, setIncomingCall] = useState([]);
-    const [remoteVideoRef, setRemoteVideoRef] = useState([]);
+    const [sessionData, setSessionData] = useState([]);
+    const [remoteStream, setRemoteStream] = useState([]);
     const [localVideoStatus, setLocalVideoStatus] = useState({ video: false, audio: false });
 
     useEffect(() => {
@@ -49,14 +49,8 @@ export default function SipJS() {
     }, []);
 
     useEffect(() => {
-        const refVideo = [];
-        incomingCall.forEach((element) => {
-            if (refVideo[element.callID] === undefined) {
-                refVideo[element.callID] = createRef();
-            }
-        });
-        setRemoteVideoRef(refVideo);
-    }, [incomingCall]);
+        console.log("remoteStream", remoteStream);
+    }, [remoteStream]);
 
     const registerSip = () => {
         console.log("registerSip");
@@ -81,39 +75,39 @@ export default function SipJS() {
         userAgent.on("registrationFailed", function (e) {});
 
         userAgent.on("newRTCSession", function (ev1) {
+            const callID = ev1.request.call_id;
             console.log(" *** newRTCSession", ev1.originator, ev1.request.method, ev1);
+            let view = false;
 
             newSession = ev1.session;
 
-            if (ev1.originator === "remote") {
-                console.log(ev1.originator);
-                setIncomingCall([
-                    ...incomingCall,
-                    {
-                        callID: ev1.request.call_id,
-                        displayName: ev1.request.from._uri._user,
-                        session: ev1,
-                        view: true,
-                    },
-                ]);
-            } else if (ev1.originator === "local") {
-                setIncomingCall([
-                    ...incomingCall,
-                    {
-                        callID: ev1.request.call_id,
-                        displayName: ev1.request.from._uri._user,
-                        session: ev1,
-                        view: false,
-                    },
-                ]);
+            if (ev1.originator === "local") {
+                newSession.connection.addEventListener("addstream", (event) => {
+                    setRemoteStream((remoteStream) => [
+                        ...remoteStream,
+                        {
+                            callID: callID,
+                            stream: event.stream,
+                        },
+                    ]);
+                });
+            } else if (ev1.originator === "remote") {
+                view = true;
             }
-            newSession.connection.addEventListener("addstream", (event) => {
-                console.log(event);
-                // remoteVideoRef.current.srcObject = event.stream;
-                // remoteVideoRef.current.classList.remove("hidden");
-            });
+            setSessionData((sessionData) => [
+                ...sessionData,
+                {
+                    callID: callID,
+                    displayName: ev1.request.from._uri._user,
+                    session: ev1,
+                    view: view,
+                },
+            ]);
+
             newSession.on("ended", (event) => {
-                console.log("ended", event);
+                console.log("ended", callID);
+                setRemoteStream((remoteStream) => remoteStream.filter((data) => data.callID != callID));
+                setSessionData((sessionData) => sessionData.filter((data) => data.callID != callID));
             });
             newSession.on("confirmed", function () {
                 console.log("add localVideo");
@@ -140,13 +134,17 @@ export default function SipJS() {
             });
             newSession.on("peerconnection", function (ev2) {
                 ev2.peerconnection.onaddstream = function (event) {
-                    console.log(event.stream);
-                    // remoteVideoRef.current.srcObject = event.stream;
-                    // remoteVideoRef.current.classList.remove("hidden");
+                    setRemoteStream((remoteStream) => [
+                        ...remoteStream,
+                        {
+                            callID: callID,
+                            stream: event.stream,
+                        },
+                    ]);
                 };
                 ev2.peerconnection.onremovestream = function (ev3) {
-                    // remoteVideoRef.current.stop();
-                    // remoteVideoRef.current.srcObject = null;
+                    setRemoteStream((remoteStream) => remoteStream.filter((data) => data.callID != callID));
+                    setSessionData((sessionData) => sessionData.filter((data) => data.callID != callID));
                 };
             });
         });
@@ -164,7 +162,7 @@ export default function SipJS() {
             },
             ended: (event) => {
                 console.log(event);
-                remoteVideoRef.current.classList.add("hidden");
+                // remoteVideoRef.current.classList.add("hidden");
             },
             confirmed: (e) => {
                 console.log("call confirmed", e);
@@ -196,12 +194,7 @@ export default function SipJS() {
             pcConfig: pcConfig,
         };
 
-        var session = userAgent.call("sip:" + registerDetail.destination + "@" + registerDetail.server, options);
-        session.connection.addEventListener("addstream", (event) => {
-            // console.log(session.connection);
-            // remoteVideoRef.current.srcObject = event.stream;
-            // remoteVideoRef.current.classList.remove("hidden");
-        });
+        userAgent.call("sip:" + registerDetail.destination + "@" + registerDetail.server, options);
     };
 
     const handleRegister = () => {
@@ -231,27 +224,27 @@ export default function SipJS() {
     };
 
     const handleAcceptCall = (callID) => {
-        const _incomingCall = incomingCall.find((incoming) => incoming.call_id === callID);
-        _incomingCall.session.session.answer({
+        const _session = sessionData.find((data) => data.call_id === callID);
+        _session.session.session.answer({
             mediaStream: mediaStream,
             pcConfig: pcConfig,
         });
-        _incomingCall.view = false;
+        _session.view = false;
 
-        const index = incomingCall.findIndex((incoming) => incoming.call_id === callID);
-        const newIncomingCall = [...incomingCall];
-        newIncomingCall[index] = _incomingCall;
-        setIncomingCall(newIncomingCall);
+        const index = sessionData.findIndex((data) => data.call_id === callID);
+        const newSessionData = [...sessionData];
+        newSessionData[index] = _session;
+        setSessionData(newSessionData);
     };
     const handleDeclineCall = (callID) => {
-        const _incomingCall = incomingCall.find((incoming) => incoming.call_id === callID);
-        _incomingCall.session.session.terminate();
-        _incomingCall.view = false;
+        const _session = sessionData.find((data) => data.call_id === callID);
+        _session.session.session.terminate();
+        _session.view = false;
 
-        const index = incomingCall.findIndex((incoming) => incoming.call_id === callID);
-        const newIncomingCall = [...incomingCall];
-        newIncomingCall[index] = _incomingCall;
-        setIncomingCall(newIncomingCall);
+        const index = sessionData.findIndex((data) => data.call_id === callID);
+        const newSessionData = [...sessionData];
+        newSessionData[index] = _session;
+        setSessionData(newSessionData);
     };
 
     const handleRegisterDetailChange = (type, value) => {
@@ -263,59 +256,55 @@ export default function SipJS() {
     };
 
     const handleMuteVideo = (muted) => {
-        if (newSession !== null) {
-            if (muted) {
-                newSession.mute({ video: true });
-            } else if (!muted) {
-                newSession.unmute({ video: true });
-            }
-        }
+        // if (newSession !== null) {
+        //     if (muted) {
+        //         newSession.mute({ video: true });
+        //     } else if (!muted) {
+        //         newSession.unmute({ video: true });
+        //     }
+        // }
     };
     const handleMutedMicrophone = (muted) => {
-        if (newSession !== null) {
-            if (muted) {
-                newSession.mute({ audio: true });
-            } else if (!muted) {
-                newSession.unmute({ audio: true });
-            }
-        }
+        // if (newSession !== null) {
+        //     if (muted) {
+        //         newSession.mute({ audio: true });
+        //     } else if (!muted) {
+        //         newSession.unmute({ audio: true });
+        //     }
+        // }
     };
 
     return (
         <>
             <div className="flex flex-row w-screen h-screen bg-slate-200 shadow-xl overflow-hidden">
-                <div className="flex w-1/4 min-w-[250px] px-3 h-full flex-col items-center self-start ">
-                    <InputSip
-                        registerDetail={registerDetail}
-                        isRegister={isRegister}
-                        handleRegister={handleRegister}
-                        handleUnRegister={handleUnRegister}
-                        handleRegisterDetailChange={handleRegisterDetailChange}
-                        handleCall={handleCall}
-                        handleHangUp={handleHangUp}
-                        isVideoMuted={localVideoStatus.video}
-                        isMicrophoneMuted={localVideoStatus.audio}
-                        handleMuteVideo={handleMuteVideo}
-                        handleMutedMicrophone={handleMutedMicrophone}
-                    />
-                </div>
-                <ViewVideo callOutRef={callOutRef} incomingCall={incomingCall} remoteVideoRef={remoteVideoRef} />
+                <InputSip
+                    registerDetail={registerDetail}
+                    isRegister={isRegister}
+                    handleRegister={handleRegister}
+                    handleUnRegister={handleUnRegister}
+                    handleRegisterDetailChange={handleRegisterDetailChange}
+                    handleCall={handleCall}
+                    handleHangUp={handleHangUp}
+                    isVideoMuted={localVideoStatus.video}
+                    isMicrophoneMuted={localVideoStatus.audio}
+                    handleMuteVideo={handleMuteVideo}
+                    handleMutedMicrophone={handleMutedMicrophone}
+                />
+                <ViewVideo callOutRef={callOutRef} sessionData={sessionData} remoteStream={remoteStream} />
             </div>
             <div className="fixed flex top-10 w-full justify-center ">
-                <div className="flex flex-col w-1/2">
-                    {incomingCall.map((incoming, index) => {
-                        return (
-                            <IncomingCall
-                                key={index}
-                                view={incoming.view}
-                                callID={incoming.call_id}
-                                displayName={incoming.displayName}
-                                handleAcceptCall={handleAcceptCall}
-                                handleDeclineCall={handleDeclineCall}
-                            />
-                        );
-                    })}
-                </div>
+                {sessionData.map((incoming, index) => {
+                    return (
+                        <IncomingCall
+                            key={index}
+                            view={incoming.view}
+                            callID={incoming.call_id}
+                            displayName={incoming.displayName}
+                            handleAcceptCall={handleAcceptCall}
+                            handleDeclineCall={handleDeclineCall}
+                        />
+                    );
+                })}
             </div>
             <div className="fixed bottom-0 w-full h-[10px] " ref={statusBarRef}></div>
         </>

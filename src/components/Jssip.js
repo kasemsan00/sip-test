@@ -242,18 +242,21 @@ export default function SipJS() {
     };
 
     const handleMuteVideo = (muted) => {
-        if (muted) {
-            newSession.mute({ video: true });
-        } else if (!muted) {
-            newSession.unmute({ video: true });
+        if (newSession !== null) {
+            if (muted) {
+                newSession.mute({ video: true });
+            } else if (!muted) {
+                newSession.unmute({ video: true });
+            }
         }
     };
     const handleMutedMicrophone = (muted) => {
-        console.log("handleMutedMicrophone");
-        if (muted) {
-            newSession.mute({ audio: true });
-        } else if (!muted) {
-            newSession.unmute({ audio: true });
+        if (newSession !== null) {
+            if (muted) {
+                newSession.mute({ audio: true });
+            } else if (!muted) {
+                newSession.unmute({ audio: true });
+            }
         }
     };
 
@@ -269,17 +272,13 @@ export default function SipJS() {
                         handleRegisterDetailChange={handleRegisterDetailChange}
                         handleCall={handleCall}
                         handleHangUp={handleHangUp}
+                        isVideoMuted={localVideoStatus.video}
+                        isMicrophoneMuted={localVideoStatus.audio}
+                        handleMuteVideo={handleMuteVideo}
+                        handleMutedMicrophone={handleMutedMicrophone}
                     />
                 </div>
-                <ViewVideo
-                    isVideoMuted={localVideoStatus.video}
-                    isMicrophoneMuted={localVideoStatus.audio}
-                    handleMuteVideo={handleMuteVideo}
-                    handleMutedMicrophone={handleMutedMicrophone}
-                    destination={registerDetail.destination}
-                    callOutRef={callOutRef}
-                    remoteVideoRef={remoteVideoRef}
-                />
+                <ViewVideo callOutRef={callOutRef} remoteVideoRef={remoteVideoRef} />
             </div>
             <div className="fixed flex top-10 w-full justify-center ">
                 <div className="flex flex-col w-1/2">

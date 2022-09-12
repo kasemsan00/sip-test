@@ -10,11 +10,20 @@ export default function SipInput({
     handleRegisterDetailChange,
     handleCall,
     handleHangUp,
+    isVideoMuted,
+    isMicrophoneMuted,
+    handleMuteVideo,
+    handleMutedMicrophone,
 }) {
     return (
         <>
             <div className="form-control w-full">
-                <ViewLocal />
+                <ViewLocal
+                    isVideoMuted={isVideoMuted}
+                    isMicrophoneMuted={isMicrophoneMuted}
+                    handleMuteVideo={handleMuteVideo}
+                    handleMutedMicrophone={handleMutedMicrophone}
+                />
             </div>
             <div className="form-control w-full ">
                 <label className="label">

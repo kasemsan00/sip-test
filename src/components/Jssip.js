@@ -256,22 +256,22 @@ export default function SipJS() {
     };
 
     const handleMuteVideo = (muted) => {
-        // if (newSession !== null) {
-        //     if (muted) {
-        //         newSession.mute({ video: true });
-        //     } else if (!muted) {
-        //         newSession.unmute({ video: true });
-        //     }
-        // }
+        if (newSession !== null) {
+            if (muted) {
+                newSession.mute({ video: true });
+            } else if (!muted) {
+                newSession.unmute({ video: true });
+            }
+        }
     };
     const handleMutedMicrophone = (muted) => {
-        // if (newSession !== null) {
-        //     if (muted) {
-        //         newSession.mute({ audio: true });
-        //     } else if (!muted) {
-        //         newSession.unmute({ audio: true });
-        //     }
-        // }
+        if (newSession !== null) {
+            if (muted) {
+                newSession.mute({ audio: true });
+            } else if (!muted) {
+                newSession.unmute({ audio: true });
+            }
+        }
     };
 
     return (

@@ -1,7 +1,7 @@
 import { Form, InputGroup, Input } from "react-daisyui";
 import DialerSipIcon from "@mui/icons-material/DialerSip";
 import ViewLocal from "./ViewLocal";
-import Setting from "./Setting";
+import Setting from "./Setting/SettingModal";
 
 export default function SipInput({
     registerDetail,

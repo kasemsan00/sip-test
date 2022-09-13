@@ -1,39 +1,52 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "lint": "next lint",
-        "start": "next start"
-    },
-    "dependencies": {
-        "@emotion/react": "^11.10.4",
-        "@emotion/styled": "^11.10.4",
-        "@mui/icons-material": "^5.10.3",
-        "@mui/material": "^5.10.4",
-        "@reduxjs/toolkit": "^1.8.5",
-        "animate.css": "^4.1.1",
-        "daisyui": "^2.27.0",
-        "jssip": "^3.9.1",
-        "next": "latest",
-        "react": "^18.2.0",
-        "react-daisyui": "^2.4.1",
-        "react-dom": "^18.2.0",
-        "react-player": "^2.10.1",
-        "react-redux": "^8.0.2",
-        "sip.js": "^0.20.0",
-        "webrtc-adapter": "^8.1.2"
-    },
-    "name": "testsip-next",
-    "description": "This is a starter template for [Learn Next.js](https://nextjs.org/learn).",
-    "version": "1.0.0",
-    "main": "index.js",
-    "devDependencies": {
-        "autoprefixer": "^10.4.9",
-        "eslint-config-next": "^12.3.0",
-        "postcss": "^8.4.16",
-        "tailwindcss": "^3.1.8"
-    },
-    "author": "",
-    "license": "ISC"
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "next lint",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.3",
+    "@mui/material": "^5.10.5",
+    "@reduxjs/toolkit": "^1.8.5",
+    "animate.css": "^4.1.1",
+    "daisyui": "^2.27.0",
+    "jssip": "^3.9.1",
+    "next": "latest",
+    "react": "^18.2.0",
+    "react-daisyui": "^2.4.1",
+    "react-dom": "^18.2.0",
+    "react-player": "^2.10.1",
+    "react-redux": "^8.0.2",
+    "sip.js": "^0.20.0",
+    "webrtc-adapter": "^8.1.2"
+  },
+  "name": "sip-demo",
+  "description": "This is a starter template for [Learn Next.js](https://nextjs.org/learn).",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "autoprefixer": "^10.4.9",
+    "eslint-config-next": "^12.3.0",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8"
+  },
+  "author": "Kasemsan Chompuwised",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://darkwiess@bitbucket.org/darkwiess/sip-test.git"
+  },
+  "keywords": [
+    "sip",
+    "demo",
+    "jssip"
+  ],
+  "bugs": {
+    "url": "https://bitbucket.org/darkwiess/sip-test/issues"
+  },
+  "homepage": "https://bitbucket.org/darkwiess/sip-test#readme"
 }

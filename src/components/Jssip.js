@@ -224,24 +224,25 @@ export default function SipJS() {
     };
 
     const handleAcceptCall = (callID) => {
-        const _session = sessionData.find((data) => data.call_id === callID);
+        const _session = sessionData.find((data) => data.callID === callID);
+        console.log("callID", _session);
         _session.session.session.answer({
             mediaStream: mediaStream,
             pcConfig: pcConfig,
         });
         _session.view = false;
 
-        const index = sessionData.findIndex((data) => data.call_id === callID);
+        const index = sessionData.findIndex((data) => data.callID === callID);
         const newSessionData = [...sessionData];
         newSessionData[index] = _session;
         setSessionData(newSessionData);
     };
     const handleDeclineCall = (callID) => {
-        const _session = sessionData.find((data) => data.call_id === callID);
+        const _session = sessionData.find((data) => data.callID === callID);
         _session.session.session.terminate();
         _session.view = false;
 
-        const index = sessionData.findIndex((data) => data.call_id === callID);
+        const index = sessionData.findIndex((data) => data.callID === callID);
         const newSessionData = [...sessionData];
         newSessionData[index] = _session;
         setSessionData(newSessionData);
@@ -298,7 +299,7 @@ export default function SipJS() {
                         <IncomingCall
                             key={index}
                             view={incoming.view}
-                            callID={incoming.call_id}
+                            callID={incoming.callID}
                             displayName={incoming.displayName}
                             handleAcceptCall={handleAcceptCall}
                             handleDeclineCall={handleDeclineCall}

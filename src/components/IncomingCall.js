@@ -1,6 +1,6 @@
 export default function IncomingCall({ callID, view, displayName, handleAcceptCall, handleDeclineCall }) {
     return (
-        <div className="flex flex-col w-1/2">
+        <div className="flex flex-col ">
             <div className={`alert shadow-lg ${view ? "" : "hidden"}`}>
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info flex-shrink-0 w-6 h-6">

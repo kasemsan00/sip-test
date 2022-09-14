@@ -34,14 +34,14 @@ export default function Setting() {
                     {activeTab === 0 ? <SipAccounts /> : null}
                     {activeTab === 1 ? <Device /> : null}
                 </Modal.Body>
-                <Modal.Actions>
+                {/* <Modal.Actions>
                     <Button color="ghost" onClick={toggleVisible}>
                         Cancel
                     </Button>
                     <Button color="success" onClick={toggleVisible}>
                         Save
                     </Button>
-                </Modal.Actions>
+                </Modal.Actions> */}
             </Modal>
         </div>
     );

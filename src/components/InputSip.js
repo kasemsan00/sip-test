@@ -2,7 +2,7 @@ import { Form, InputGroup, Input, Radio } from "react-daisyui";
 import DialerSipIcon from "@mui/icons-material/DialerSip";
 import ViewLocal from "./ViewLocal";
 import { useState } from "react";
-// import Setting from "./Setting/SettingModal";
+import Setting from "./Setting/SettingModal";
 
 const SelectCodec = () => {
     const handleCodecChange = (value) => {
@@ -45,6 +45,8 @@ export default function SipInput({
     isMicrophoneMuted,
     handleMuteVideo,
     handleMutedMicrophone,
+    destination,
+    setDestination,
     setCodec,
 }) {
     return (
@@ -124,8 +126,8 @@ export default function SipInput({
                         type="text"
                         placeholder="Type here"
                         className="input input-bordered input-info w-full text-center"
-                        value={registerDetail.destination}
-                        onChange={(event) => handleRegisterDetailChange("destination", event.target.value)}
+                        value={destination}
+                        onChange={(event) => setDestination(event.target.value)}
                         bordered
                     />
                 </InputGroup>
@@ -137,8 +139,8 @@ export default function SipInput({
                 HangUp
             </button>
 
-            <SelectCodec />
-            {/* <Setting /> */}
+            {/* <SelectCodec /> */}
+            <Setting />
         </div>
     );
 }

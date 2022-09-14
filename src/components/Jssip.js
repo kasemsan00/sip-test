@@ -36,8 +36,8 @@ export default function SipJS() {
         websocket: "wss://test-135-sip.ttrs.in.th:443/ws",
         extension: "User2",
         password: "test1234",
-        destination: "9999",
     });
+    const [destination, setDestination] = useState("");
     const [isRegister, setIsRegister] = useState(false);
     const [sessionData, setSessionData] = useState([]);
     const [remoteStream, setRemoteStream] = useState([]);
@@ -46,6 +46,9 @@ export default function SipJS() {
     useEffect(() => {
         if (localStorage.getItem("registerDetail") !== null) {
             setRegisterDetail(JSON.parse(localStorage.getItem("registerDetail")));
+        }
+        if (localStorage.getItem("destination") !== null) {
+            setDestination(localStorage.getItem("destination"));
         }
         if (localStorage.getItem("codec") === null) {
             localStorage.setItem("codec", "h264");
@@ -167,7 +170,7 @@ export default function SipJS() {
     const sipCall = () => {
         var eventHandlers = {
             progress: (e) => {
-                callOutRef.current.innerText = "Call " + registerDetail.destination;
+                callOutRef.current.innerText = "Call " + destination;
                 console.log("call is in progress");
             },
             failed: (e) => {
@@ -208,7 +211,7 @@ export default function SipJS() {
             pcConfig: pcConfig,
         };
 
-        userAgent.call("sip:" + registerDetail.destination + "@" + registerDetail.server, options);
+        userAgent.call("sip:" + destination + "@" + registerDetail.server, options);
     };
 
     const handleRegister = () => {
@@ -222,8 +225,8 @@ export default function SipJS() {
 
     const handleCall = () => {
         try {
-            localStorage.setItem("destination", JSON.stringify(registerDetail));
-            callOutRef.current.innerText = "Call " + registerDetail.destination;
+            localStorage.setItem("destination", destination);
+            callOutRef.current.innerText = "Call " + destination;
             callOutRef.current.classList.replace("hidden", "fixed");
             sipCall();
         } catch (error) {
@@ -303,6 +306,8 @@ export default function SipJS() {
                     isMicrophoneMuted={localVideoStatus.audio}
                     handleMuteVideo={handleMuteVideo}
                     handleMutedMicrophone={handleMutedMicrophone}
+                    destination={destination}
+                    setDestination={setDestination}
                 />
                 <ViewVideo callOutRef={callOutRef} sessionData={sessionData} remoteStream={remoteStream} />
             </div>

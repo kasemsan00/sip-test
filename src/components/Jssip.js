@@ -4,7 +4,7 @@ import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
 import { useSelector } from "react-redux";
-import CodecHandler from "../middleware/CodecHandler";
+// import CodecHandler from "../middleware/CodecHandler";
 import adapter from "webrtc-adapter";
 
 // iceServers: [
@@ -137,13 +137,13 @@ export default function SipJS() {
                 console.log(event);
             });
             newSession.on("sdp", (event) => {
-                console.log("Codec", localStorage.getItem("codec"), event.originator);
-                if (event.originator === "remote") {
-                    event.sdp = CodecHandler.preferCodec(event.sdp, localStorage.getItem("codec"));
-                }
-                if (event.originator === "local") {
-                    event.sdp = CodecHandler.preferCodec(event.sdp, localStorage.getItem("codec"));
-                }
+                // console.log("Codec", localStorage.getItem("codec"), event.originator);
+                // if (event.originator === "remote") {
+                //     event.sdp = CodecHandler.preferCodec(event.sdp, localStorage.getItem("codec"));
+                // }
+                // if (event.originator === "local") {
+                //     event.sdp = CodecHandler.preferCodec(event.sdp, localStorage.getItem("codec"));
+                // }
             });
             newSession.on("peerconnection", function (ev2) {
                 ev2.peerconnection.onaddstream = function (event) {

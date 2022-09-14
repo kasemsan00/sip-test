@@ -24,3 +24,5 @@ wss://test-kamailio-sip.ttrs.in.th:8089/ws
 test1234
 
 wss://test-135-sip.ttrs.in.th:443/ws
+
+{"threadid":"l81dinff","extension":"1429900148716","type":"vrs,vri","secret":"NB6QUTYAbbvjrXYmnzIU","domain":"vrsclient.ttrs.in.th","websocket":"wss://vrsclient.ttrs.in.th:4443/ws","dtmcreated":"2022-09-14T08:41:16.000Z","status":"open"}

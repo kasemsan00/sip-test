@@ -4,6 +4,7 @@ import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
 import { useSelector } from "react-redux";
+import CodecHandler from "../middleware/CodecHandler";
 import adapter from "webrtc-adapter";
 
 // iceServers: [
@@ -36,7 +37,7 @@ export default function SipJS() {
         websocket: "wss://test-135-sip.ttrs.in.th:443/ws",
         extension: "User2",
         password: "test1234",
-        destination: "9999",
+        destination: "14120",
     });
     const [isRegister, setIsRegister] = useState(false);
     const [incomingCall, setIncomingCall] = useState([]);
@@ -53,7 +54,7 @@ export default function SipJS() {
         var socket = new JsSIP.WebSocketInterface(registerDetail.websocket);
         var configuration = {
             sockets: [socket],
-            uri: "sip:" + registerDetail.extension + "@" + registerDetail.server,
+            uri: "sip:" + registerDetail.extension.trim() + "@" + registerDetail.server.trim(),
             password: registerDetail.password,
         };
 
@@ -112,6 +113,14 @@ export default function SipJS() {
             });
             newSession.on("addstream", (event) => {
                 console.log(event);
+            });
+            newSession.on("sdp", (event) => {
+                // if (event.originator === "remote") {
+                //     event.sdp = CodecHandler.preferCodec(event.sdp, "h264");
+                // }
+                // if (event.originator === "local") {
+                //     event.sdp = CodecHandler.preferCodec(event.sdp, "h264");
+                // }
             });
             // peerconnection
             newSession.on("peerconnection", function (ev2) {

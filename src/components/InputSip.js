@@ -1,6 +1,7 @@
 import { Form, InputGroup, Input } from "react-daisyui";
 import DialerSipIcon from "@mui/icons-material/DialerSip";
 import ViewLocal from "./ViewLocal";
+import Setting from "./Setting/SettingModal";
 
 export default function SipInput({
     registerDetail,
@@ -104,6 +105,7 @@ export default function SipInput({
             <button className="btn btn-warning w-full m-2" onClick={handleHangUp}>
                 HangUp
             </button>
+            <Setting />
         </div>
     );
 }

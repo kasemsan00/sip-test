@@ -26,8 +26,12 @@ export default function ViewVideo({ callOutRef, sessionData, remoteStream }) {
     }, [remoteStream, remoteVideoRef]);
 
     const handleCallEnd = (callID) => {
-        const _session = sessionData.find((data) => data.callID === callID);
-        _session.session.session.terminate();
+        try {
+            const _session = sessionData.find((data) => data.callID === callID);
+            _session.session.session.terminate();
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (

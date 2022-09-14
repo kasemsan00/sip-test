@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef, createRef } from "react";
-import JsSIP from "jssip";
+import JsSIP, { C } from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
 import { useSelector } from "react-redux";
+import CodecHandler from "../middleware/CodecHandler";
 import adapter from "webrtc-adapter";
 
 // iceServers: [
@@ -45,6 +46,9 @@ export default function SipJS() {
     useEffect(() => {
         if (localStorage.getItem("registerDetail") !== null) {
             setRegisterDetail(JSON.parse(localStorage.getItem("registerDetail")));
+        }
+        if (localStorage.getItem("codec") === null) {
+            localStorage.setItem("codec", "h264");
         }
     }, []);
 
@@ -132,8 +136,18 @@ export default function SipJS() {
             newSession.on("addstream", (event) => {
                 console.log(event);
             });
+            newSession.on("sdp", (event) => {
+                console.log("Codec", localStorage.getItem("codec"), event.originator);
+                if (event.originator === "remote") {
+                    event.sdp = CodecHandler.preferCodec(event.sdp, localStorage.getItem("codec"));
+                }
+                if (event.originator === "local") {
+                    event.sdp = CodecHandler.preferCodec(event.sdp, localStorage.getItem("codec"));
+                }
+            });
             newSession.on("peerconnection", function (ev2) {
                 ev2.peerconnection.onaddstream = function (event) {
+                    console.log(event.stream);
                     setRemoteStream((remoteStream) => [
                         ...remoteStream,
                         {
@@ -217,10 +231,9 @@ export default function SipJS() {
         }
     };
     const handleHangUp = async () => {
-        incomingCall.forEach((incoming) => {
+        sessionData.forEach((incoming) => {
             incoming.session.session.terminate();
         });
-        remoteVideoRef.current.classList.add("hidden");
     };
 
     const handleAcceptCall = (callID) => {

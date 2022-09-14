@@ -1,7 +1,37 @@
-import { Form, InputGroup, Input } from "react-daisyui";
+import { Form, InputGroup, Input, Radio } from "react-daisyui";
 import DialerSipIcon from "@mui/icons-material/DialerSip";
 import ViewLocal from "./ViewLocal";
-import Setting from "./Setting/SettingModal";
+import { useState } from "react";
+// import Setting from "./Setting/SettingModal";
+
+const SelectCodec = () => {
+    const handleCodecChange = (value) => {
+        localStorage.setItem("codec", value);
+    };
+
+    return (
+        <div className="flex flex-1 w-full justify-center">
+            <div className="form-control">
+                <label className="label cursor-pointer">
+                    <input
+                        type="radio"
+                        name="radio-6"
+                        className="radio checked:bg-red-500"
+                        defaultChecked
+                        onClick={() => handleCodecChange("h264")}
+                    />
+                    <span className="ml-2 label-text">H264</span>
+                </label>
+            </div>
+            <div className="form-control">
+                <label className="label cursor-pointer">
+                    <input type="radio" name="radio-6" className="radio checked:bg-blue-500" onClick={() => handleCodecChange("vp8")} />
+                    <span className="ml-2 label-text">VP8</span>
+                </label>
+            </div>
+        </div>
+    );
+};
 
 export default function SipInput({
     registerDetail,
@@ -15,6 +45,7 @@ export default function SipInput({
     isMicrophoneMuted,
     handleMuteVideo,
     handleMutedMicrophone,
+    setCodec,
 }) {
     return (
         <div className="flex w-1/4 min-w-[250px] px-3 h-full flex-col items-center self-start ">
@@ -105,7 +136,9 @@ export default function SipInput({
             <button className="btn btn-warning w-full m-2" onClick={handleHangUp}>
                 HangUp
             </button>
-            <Setting />
+
+            <SelectCodec />
+            {/* <Setting /> */}
         </div>
     );
 }

@@ -1,50 +1,58 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setProfile } from "../../redux/slices/profileSlice";
 const _ = require("lodash");
 import { Form, InputGroup, Input, Radio } from "react-daisyui";
 export default function SipAccounts() {
+    const dispatch = useDispatch();
     const [registerDetail, setRegisterDetail] = useState({
-        server: "test-135-sip.ttrs.in.th",
-        websocket: "wss://test-135-sip.ttrs.in.th:443/ws",
-        extension: "User2",
-        password: "test1234",
+        server: "",
+        websocket: "",
+        extension: "",
+        password: "",
     });
     const [registerData, setRegisterData] = useState([]);
     const [selectProfile, setSelectProfile] = useState("profile1");
 
     useEffect(() => {
-        if (localStorage.getItem(selectProfile) !== "") {
-            const profileData = JSON.parse(localStorage.getItem(selectProfile));
-
-            if (profileData !== null) {
-                setRegisterDetail(JSON.parse(localStorage.getItem(selectProfile)));
-            } else {
-                setRegisterDetail({
-                    server: "",
-                    websocket: "",
-                    extension: "",
-                    password: "",
-                });
-            }
+        if (registerData.length === 0 && localStorage.getItem("profile") !== null) {
+            console.log("initial profile");
+            const initData = JSON.parse(localStorage.getItem("profile"));
+            setRegisterData(JSON.parse(localStorage.getItem("profile")));
+            setRegisterDetail(initData[selectProfile]);
         }
-    }, [selectProfile]);
+    }, [selectProfile, registerData]);
 
     const handleRegisterDetailChange = (type, value) => {
         setRegisterDetail((prevState) => ({ ...prevState, [type]: value }));
-        debounceSaveProfile(selectProfile, JSON.stringify(registerDetail));
+        setRegisterData({ ...registerData, [selectProfile]: registerDetail });
     };
 
     const handleProfileChange = (event) => {
         setSelectProfile(event.target.value);
-        
+        const getData = registerData[event.target.value];
+        if (getData !== undefined) {
+            setRegisterDetail(getData);
+        } else {
+            setRegisterDetail({
+                server: "",
+                websocket: "",
+                extension: "",
+                password: "",
+            });
+        }
     };
 
-    const saveProfile = (profile, data) => {
-        // localStorage.setItem(profile, data);
-        
-        setRegisterData([..., []])
-    };
-    const debounceSaveProfile = _.debounce(saveProfile, 100);
-
+    useEffect(() => {
+        const saveProfile = (data) => {
+            if (data.length !== 0) {
+                localStorage.setItem("profile", JSON.stringify(data));
+                dispatch(setProfile(data));
+            }
+        };
+        const debounceSaveProfile = _.debounce(saveProfile, 300);
+        debounceSaveProfile(registerData);
+    }, [dispatch, registerData]);
     return (
         <div>
             <select className="mt-2 select select-bordered select-sm w-full mb-2" onChange={(event) => handleProfileChange(event)}>

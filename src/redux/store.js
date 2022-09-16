@@ -8,7 +8,7 @@ const middleware = [reduxThunk];
 
 const store = configureStore({
     reducer: {
-        profileSlice: profileSlice,
+        profile: profileSlice,
         mediaStream: mediaStreamSlice,
         userAgent: userAgentSlice,
     },

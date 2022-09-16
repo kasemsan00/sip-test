@@ -7,10 +7,10 @@ const profileSlice = createSlice({
     initialState,
     reducers: {
         setProfile(state, action) {
-            return [...state, [action.name], action.data];
+            return action.payload;
         },
     },
 });
 
-export const { setLocalStream } = profileSlice.actions;
+export const { setProfile } = profileSlice.actions;
 export default profileSlice.reducer;

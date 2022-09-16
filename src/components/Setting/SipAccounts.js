@@ -8,19 +8,23 @@ export default function SipAccounts() {
         extension: "User2",
         password: "test1234",
     });
+    const [registerData, setRegisterData] = useState([]);
     const [selectProfile, setSelectProfile] = useState("profile1");
 
     useEffect(() => {
-        const profileData = JSON.parse(localStorage.getItem(selectProfile));
-        if (profileData !== null) {
-            setRegisterDetail(JSON.parse(localStorage.getItem(selectProfile)));
-        } else {
-            setRegisterDetail({
-                server: "",
-                websocket: "",
-                extension: "",
-                password: "",
-            });
+        if (localStorage.getItem(selectProfile) !== "") {
+            const profileData = JSON.parse(localStorage.getItem(selectProfile));
+
+            if (profileData !== null) {
+                setRegisterDetail(JSON.parse(localStorage.getItem(selectProfile)));
+            } else {
+                setRegisterDetail({
+                    server: "",
+                    websocket: "",
+                    extension: "",
+                    password: "",
+                });
+            }
         }
     }, [selectProfile]);
 
@@ -31,10 +35,13 @@ export default function SipAccounts() {
 
     const handleProfileChange = (event) => {
         setSelectProfile(event.target.value);
+        
     };
 
     const saveProfile = (profile, data) => {
-        localStorage.setItem(profile, data);
+        // localStorage.setItem(profile, data);
+        
+        setRegisterData([..., []])
     };
     const debounceSaveProfile = _.debounce(saveProfile, 100);
 

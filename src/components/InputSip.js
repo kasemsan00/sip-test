@@ -3,6 +3,7 @@ import DialerSipIcon from "@mui/icons-material/DialerSip";
 import ViewLocal from "./ViewLocal";
 import { useState } from "react";
 import Setting from "./Setting/SettingModal";
+import ChangeProfile from "./ChangeProfile";
 
 const SelectCodec = () => {
     const handleCodecChange = (value) => {
@@ -58,6 +59,9 @@ export default function SipInput({
                     handleMuteVideo={handleMuteVideo}
                     handleMutedMicrophone={handleMutedMicrophone}
                 />
+            </div>
+            <div className="form-control w-full">
+                <ChangeProfile />
             </div>
             <div className="form-control w-full ">
                 <label className="label">

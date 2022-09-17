@@ -27,12 +27,18 @@ export default function SipAccounts({ visible }) {
   const handleRegisterDetailChange = (type, value) => {
     console.log(value);
     setRegisterDetail((prevState) => ({ ...prevState, [type]: value }));
-    setRegisterData({ ...registerData, [selectProfile]: registerDetail });
+    setRegisterData({
+      ...registerData,
+      [selectProfile]: { ...registerDetail, [type]: value },
+    });
   };
 
   useEffect(() => {
     if (visible === false) {
-      dispatch(setProfile(registerData));
+      if (registerData.length !== 0) {
+        localStorage.setItem("profileData", JSON.stringify(registerData));
+        dispatch(setProfile(registerData));
+      }
     }
   }, [dispatch, registerData, visible]);
 
@@ -51,16 +57,6 @@ export default function SipAccounts({ visible }) {
     }
   };
 
-  //   useEffect(() => {
-  //     console.log(registerData);
-  //     // const saveProfile = (data) => {
-  //     //   if (data.length !== 0) {
-  //     //     localStorage.setItem("profileData", JSON.stringify(data));
-  //     dispatch(setProfile(registerData));
-  //     //   }
-  //     // };
-  //     // saveProfile(registerData);
-  //   }, [dispatch, registerData]);
   return (
     <div>
       <select className="mt-2 select select-bordered select-sm w-full mb-2" onChange={(event) => handleProfileChange(event)}>

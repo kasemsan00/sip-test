@@ -3,7 +3,8 @@ import JsSIP, { C } from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setRegisterStatus } from "../redux/slices/registerStatusSlice";
 import RegisterStatus from "../components/RegisterStatus";
 // import CodecHandler from "../middleware/CodecHandler";
 import adapter from "webrtc-adapter";
@@ -17,14 +18,13 @@ const pcConfig = {
 };
 
 export default function SipJS() {
+  const dispatch = useDispatch();
   const profileSelect = useSelector((state) => state.profileSelect);
   const profileData = useSelector((state) => state.profileData);
   const mediaStream = useSelector((state) => state.mediaStream);
   const callOutRef = useRef(null);
-  const statusBarRef = useRef(null);
 
   const [destination, setDestination] = useState("");
-  const [isRegister, setIsRegister] = useState(false);
   const [sessionData, setSessionData] = useState([]);
   const [remoteStream, setRemoteStream] = useState([]);
   const [localVideoStatus, setLocalVideoStatus] = useState({ video: false, audio: false });
@@ -51,22 +51,38 @@ export default function SipJS() {
       password: profileData[profileSelect].password,
     };
 
-    console.log(configuration);
-
     userAgent = new JsSIP.UA(configuration);
     userAgent.start();
-    userAgent.on("registered", function (e) {
-      setIsRegister(true);
-      statusBarChange("bg-green-500");
-    });
-    userAgent.on("unregistered", function (e) {
-      setIsRegister(false);
-      statusBarChange("bg-red-500");
-      console.log(e);
-    });
-    userAgent.on("registrationFailed", function (e) {});
+    dispatch(setRegisterStatus("registerProcess"));
 
-    userAgent.on("newRTCSession", function (ev1) {
+    userAgent.on("connecting", (event) => {
+      console.log("connecting");
+      console.log(event);
+      dispatch(setRegisterStatus("connecting"));
+    });
+
+    userAgent.on("registered", (event) => {
+      console.log("registered");
+      console.log(event);
+      dispatch(setRegisterStatus("registered"));
+    });
+    userAgent.on("unregistered", (event) => {
+      console.log("unregistered");
+      console.log(event);
+      dispatch(setRegisterStatus("unregistered"));
+    });
+    userAgent.on("registrationFailed", (event) => {
+      console.log("registrationFailed");
+      console.log(event);
+      dispatch(setRegisterStatus("registrationFailed"));
+    });
+    userAgent.on("disconnected", (event) => {
+      console.log("disconnected");
+      console.log(event);
+      dispatch(setRegisterStatus("disconnected"));
+    });
+
+    userAgent.on("newRTCSession", (ev1) => {
       const callID = ev1.request.call_id;
       console.log(" *** newRTCSession", ev1.originator, ev1.request.method, ev1);
       let view = false;
@@ -200,6 +216,9 @@ export default function SipJS() {
   };
 
   const handleRegister = () => {
+    if (userAgent !== null) {
+      userAgent.stop();
+    }
     registerSip();
   };
 
@@ -248,10 +267,6 @@ export default function SipJS() {
     setSessionData(newSessionData);
   };
 
-  const statusBarChange = (status) => {
-    statusBarRef.current.className = "fixed bottom-0 h-[10px] w-full " + status;
-  };
-
   const handleMuteVideo = (muted) => {
     if (newSession !== null) {
       if (muted) {
@@ -273,10 +288,8 @@ export default function SipJS() {
 
   return (
     <>
-      <RegisterStatus />
       <div className="flex flex-row w-screen h-screen bg-slate-200 shadow-xl overflow-hidden">
         <InputSip
-          isRegister={isRegister}
           handleRegister={handleRegister}
           handleUnRegister={handleUnRegister}
           handleCall={handleCall}
@@ -304,7 +317,6 @@ export default function SipJS() {
           );
         })}
       </div>
-      <div className="fixed bottom-0 w-full h-[10px] " ref={statusBarRef}></div>
     </>
   );
 }

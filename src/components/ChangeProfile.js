@@ -7,6 +7,7 @@ const initialProfile = "profile1";
 export default function ChangeProfile() {
   const dispatch = useDispatch();
   const profileData = useSelector((state) => state.profileData);
+  const status = useSelector((state) => state.registerStatus);
 
   useEffect(() => {
     if (localStorage.getItem("profileSelect") === null) {
@@ -23,7 +24,11 @@ export default function ChangeProfile() {
   };
 
   return (
-    <select className="select select-bordered select-xs max-w-[200px]" onChange={(event) => handleProfileChange(event)}>
+    <select
+      className="select select-bordered select-xs max-w-[200px]"
+      onChange={(event) => handleProfileChange(event)}
+      disabled={status === "" || status === "disconnected" ? false : true}
+    >
       {Object.keys(profileData).map((profileName, index) => {
         return (
           <option key={index} value={profileName}>

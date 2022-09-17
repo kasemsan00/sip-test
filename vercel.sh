@@ -1,2 +1,0 @@
-vercel build
-vercel --prod

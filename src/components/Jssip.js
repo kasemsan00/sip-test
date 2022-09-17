@@ -5,7 +5,6 @@ import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegisterStatus } from "../redux/slices/registerStatusSlice";
-import RegisterStatus from "../components/RegisterStatus";
 // import CodecHandler from "../middleware/CodecHandler";
 import adapter from "webrtc-adapter";
 
@@ -19,6 +18,8 @@ const pcConfig = {
 
 export default function SipJS() {
   const dispatch = useDispatch();
+
+  const registerStatus = useSelector((state) => state.registerStatus);
   const profileSelect = useSelector((state) => state.profileSelect);
   const profileData = useSelector((state) => state.profileData);
   const mediaStream = useSelector((state) => state.mediaStream);
@@ -231,7 +232,9 @@ export default function SipJS() {
       localStorage.setItem("destination", destination);
       callOutRef.current.innerText = "Call " + destination;
       callOutRef.current.classList.replace("hidden", "fixed");
-      sipCall();
+      if (registerStatus === "registered") {
+        sipCall();
+      }
     } catch (error) {
       console.log(error);
     }

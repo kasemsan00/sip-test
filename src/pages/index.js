@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import Head from "next/head";
 
-const DynamicJssip = dynamic(() => import("../components/Jssip"));
+const DynamicSipMain = dynamic(() => import("../components/SipMain"));
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
       <Suspense fallback={`Loading...`}>
-        <DynamicJssip />
+        <DynamicSipMain />
       </Suspense>
     </>
   );

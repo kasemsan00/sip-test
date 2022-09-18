@@ -5,11 +5,13 @@ import mediaStreamSlice from "./slices/mediaStreamSlice";
 import profileDataSlice from "./slices/profileDataSlice";
 import profileSelectSlice from "./slices/profileSelectSlice";
 import registerStatusSlice from "./slices/registerStatusSlice";
+import proxyServerSlice from "./slices/proxyServerSlice";
 
 const middleware = [reduxThunk];
 
 const store = configureStore({
   reducer: {
+    proxyServer: proxyServerSlice,
     registerStatus: registerStatusSlice,
     profileSelect: profileSelectSlice,
     profileData: profileDataSlice,

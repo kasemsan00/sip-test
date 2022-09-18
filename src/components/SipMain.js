@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, createRef } from "react";
-import JsSIP, { C } from "jssip";
+import JsSIP from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
@@ -16,7 +16,7 @@ const pcConfig = {
   sdpSemantics: "unified-plan",
 };
 
-export default function SipJS() {
+export default function SipMain() {
   const dispatch = useDispatch();
 
   const registerStatus = useSelector((state) => state.registerStatus);
@@ -225,11 +225,14 @@ export default function SipJS() {
   };
 
   const handleUnRegister = () => {
-    userAgent.stop();
+    if (userAgent !== null) {
+      userAgent.stop();
+    }
   };
 
   const handleCall = () => {
     try {
+      if (registerStatus !== "registered") return null;
       localStorage.setItem("destination", destination);
       callOutRef.current.innerText = "Call " + destination;
       callOutRef.current.classList.replace("hidden", "fixed");
@@ -239,9 +242,14 @@ export default function SipJS() {
     }
   };
   const handleHangUp = async () => {
-    sessionData.forEach((incoming) => {
-      incoming.session.session.terminate();
-    });
+    try {
+      if (registerStatus !== "registered") return null;
+      sessionData.forEach((incoming) => {
+        incoming.session.session.terminate();
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleAcceptCall = (callID) => {

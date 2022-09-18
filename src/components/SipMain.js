@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef, createRef } from "react";
-import JsSIP, { C } from "jssip";
+import JsSIP from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegisterStatus } from "../redux/slices/registerStatusSlice";
-import RegisterStatus from "../components/RegisterStatus";
 // import CodecHandler from "../middleware/CodecHandler";
 import adapter from "webrtc-adapter";
 
@@ -17,8 +16,10 @@ const pcConfig = {
   sdpSemantics: "unified-plan",
 };
 
-export default function SipJS() {
+export default function SipMain() {
   const dispatch = useDispatch();
+
+  const registerStatus = useSelector((state) => state.registerStatus);
   const profileSelect = useSelector((state) => state.profileSelect);
   const profileData = useSelector((state) => state.profileData);
   const mediaStream = useSelector((state) => state.mediaStream);
@@ -169,6 +170,7 @@ export default function SipJS() {
   };
 
   const sipCall = () => {
+    if (registerStatus !== "registered") return null;
     var eventHandlers = {
       progress: (e) => {
         callOutRef.current.innerText = "Call " + destination;
@@ -223,11 +225,14 @@ export default function SipJS() {
   };
 
   const handleUnRegister = () => {
-    userAgent.stop();
+    if (userAgent !== null) {
+      userAgent.stop();
+    }
   };
 
   const handleCall = () => {
     try {
+      if (registerStatus !== "registered") return null;
       localStorage.setItem("destination", destination);
       callOutRef.current.innerText = "Call " + destination;
       callOutRef.current.classList.replace("hidden", "fixed");
@@ -237,9 +242,14 @@ export default function SipJS() {
     }
   };
   const handleHangUp = async () => {
-    sessionData.forEach((incoming) => {
-      incoming.session.session.terminate();
-    });
+    try {
+      if (registerStatus !== "registered") return null;
+      sessionData.forEach((incoming) => {
+        incoming.session.session.terminate();
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleAcceptCall = (callID) => {

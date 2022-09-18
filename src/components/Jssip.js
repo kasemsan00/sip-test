@@ -170,6 +170,7 @@ export default function SipJS() {
   };
 
   const sipCall = () => {
+    if (registerStatus !== "registered") return null;
     var eventHandlers = {
       progress: (e) => {
         callOutRef.current.innerText = "Call " + destination;
@@ -232,9 +233,7 @@ export default function SipJS() {
       localStorage.setItem("destination", destination);
       callOutRef.current.innerText = "Call " + destination;
       callOutRef.current.classList.replace("hidden", "fixed");
-      if (registerStatus === "registered") {
-        sipCall();
-      }
+      sipCall();
     } catch (error) {
       console.log(error);
     }

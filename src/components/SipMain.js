@@ -33,9 +33,6 @@ export default function SipMain() {
         if (localStorage.getItem("destination") !== null) {
             setDestination(localStorage.getItem("destination"));
         }
-        if (localStorage.getItem("codec") === null) {
-            localStorage.setItem("codec", "h264");
-        }
     }, []);
 
     useEffect(() => {
@@ -60,7 +57,6 @@ export default function SipMain() {
             console.log(event);
             dispatch(setRegisterStatus("connecting"));
         });
-
         userAgent.on("registered", (event) => {
             console.log("registered");
             console.log(event);
@@ -91,6 +87,14 @@ export default function SipMain() {
 
             if (ev1.originator === "local") {
                 newSession.connection.addEventListener("addstream", (event) => {
+                    const transceiver = event.currentTarget
+                        .getTransceivers()
+                        .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+
+                    const codecs = JSON.parse(localStorage.getItem("codec"));
+                    transceiver.setCodecPreferences(codecs);
+                    console.log("setCodec", codecs);
+                    console.log("setRemoteStream");
                     setRemoteStream((remoteStream) => [
                         ...remoteStream,
                         {
@@ -140,16 +144,8 @@ export default function SipMain() {
             newSession.on("addstream", (event) => {
                 console.log(event);
             });
-            newSession.on("sdp", (event) => {
-                // console.log("Codec", localStorage.getItem("codec"), event.originator);
-                // if (event.originator === "remote") {
-                //     event.sdp = CodecHandler.preferCodec(event.sdp, localStorage.getItem("codec"));
-                // }
-                // if (event.originator === "local") {
-                //     event.sdp = CodecHandler.preferCodec(event.sdp, localStorage.getItem("codec"));
-                // }
-            });
             newSession.on("peerconnection", function (ev2) {
+                console.log(ev2);
                 ev2.peerconnection.onaddstream = function (event) {
                     console.log(event.stream);
                     setRemoteStream((remoteStream) => [
@@ -161,6 +157,7 @@ export default function SipMain() {
                     ]);
                 };
                 ev2.peerconnection.onremovestream = function (ev3) {
+                    console.log("setRemoteStream");
                     setRemoteStream((remoteStream) => remoteStream.filter((data) => data.callID != callID));
                     setSessionData((sessionData) => sessionData.filter((data) => data.callID != callID));
                 };
@@ -205,6 +202,12 @@ export default function SipMain() {
                     setLocalVideoStatus((prevState) => ({ ...prevState, audio: false }));
                 }
             },
+            peerconnection: (pc) => {
+                console.log(pc.peerconnection);
+                // const transceiver = pc.peerconnection.getTransceivers().find((t) => t.sender && t.sender.track === localStream.getVideoTracks()[0]);
+                // console.log(pc.peerconnection);
+                // transceiver.setCodecPreferences(localStorage.getItem("codec"));
+            },
         };
 
         var options = {
@@ -212,7 +215,6 @@ export default function SipMain() {
             mediaStream: mediaStream,
             pcConfig: pcConfig,
         };
-
         userAgent.call("sip:" + destination + "@" + profileData[profileSelect].server, options);
     };
 
@@ -230,15 +232,16 @@ export default function SipMain() {
     };
 
     const handleCall = () => {
-        try {
-            if (registerStatus !== "registered") return null;
-            localStorage.setItem("destination", destination);
-            callOutRef.current.innerText = "Call " + destination;
-            callOutRef.current.classList.replace("hidden", "fixed");
-            sipCall();
-        } catch (error) {
-            console.log(error);
-        }
+        // try {
+        console.log("register status", registerStatus);
+        if (registerStatus !== "registered") return null;
+        localStorage.setItem("destination", destination);
+        callOutRef.current.innerText = "Call " + destination;
+        callOutRef.current.classList.replace("hidden", "fixed");
+        sipCall();
+        // } catch (error) {
+        //     console.log(error);
+        // }
     };
     const handleHangUp = async () => {
         try {

@@ -6,6 +6,7 @@ const initialProfile = "profile1";
 
 export default function ChangeProfile() {
     const dispatch = useDispatch();
+    const profileSelect = useSelector((state) => state.profileSelect);
     const profileData = useSelector((state) => state.profileData);
     const status = useSelector((state) => state.registerStatus);
 
@@ -26,6 +27,7 @@ export default function ChangeProfile() {
     return (
         <select
             className="select select-bordered select-xs max-w-[200px]"
+            value={profileSelect}
             onChange={(event) => handleProfileChange(event)}
             disabled={status === "" || status === "disconnected" ? false : true}
         >

@@ -9,7 +9,13 @@ import { useEffect, useState } from "react";
 
 const SelectCodec = ({ codecSupport }) => {
     const handleCodecChange = (event) => {
-        localStorage.setItem("codec", event.target.value);
+        const codecs = codecSupport;
+        console.log(codecs[event.target.value]);
+
+        const selectedCodec = codecs[event.target.value];
+        codecs.splice(event.target.value, 1);
+        codecs.unshift(selectedCodec);
+        localStorage.setItem("codec", JSON.stringify(codecs));
     };
 
     return (
@@ -17,7 +23,7 @@ const SelectCodec = ({ codecSupport }) => {
             <select className="mt-2 select select-bordered select-sm w-full mb-2" onChange={(event) => handleCodecChange(event)}>
                 {codecSupport.map((codec, index) => {
                     return (
-                        <option key={index} value={(codec.mimeType + " " + (codec.sdpFmtpLine || "")).trim()}>
+                        <option key={index} value={index}>
                             {codec.mimeType + " " + (codec.sdpFmtpLine || "").trim()}
                         </option>
                     );

@@ -59,7 +59,11 @@ export default function SipAccounts({ visible }) {
 
     return (
         <div>
-            <select className="mt-2 select select-bordered select-sm w-full mb-2" onChange={(event) => handleProfileChange(event)}>
+            <select
+                className="mt-2 select select-bordered select-sm w-full mb-2"
+                value={selectProfile}
+                onChange={(event) => handleProfileChange(event)}
+            >
                 <option value="profile1">Profile 1</option>
                 <option value="profile2">Profile 2</option>
                 <option value="profile3">Profile 3</option>

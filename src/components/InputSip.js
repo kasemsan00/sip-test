@@ -10,9 +10,8 @@ import { useEffect, useState } from "react";
 const SelectCodec = ({ codecSupport }) => {
     const handleCodecChange = (event) => {
         const codecs = codecSupport;
-        console.log(codecs[event.target.value]);
-
         const selectedCodec = codecs[event.target.value];
+        console.log(selectedCodec);
         codecs.splice(event.target.value, 1);
         codecs.unshift(selectedCodec);
         localStorage.setItem("codec", JSON.stringify(codecs));

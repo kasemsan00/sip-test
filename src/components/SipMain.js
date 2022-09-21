@@ -94,7 +94,6 @@ export default function SipMain() {
                     const codecs = JSON.parse(localStorage.getItem("codec"));
                     transceiver.setCodecPreferences(codecs);
                     console.log("setCodec", codecs);
-                    console.log("setRemoteStream");
                     setRemoteStream((remoteStream) => [
                         ...remoteStream,
                         {

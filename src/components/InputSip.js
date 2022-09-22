@@ -11,7 +11,7 @@ const SelectCodec = ({ codecSupport }) => {
     const handleCodecChange = (event) => {
         const codecs = codecSupport;
         const selectedCodec = codecs[event.target.value];
-        console.log(selectedCodec);
+        console.log(selectedCodec)
         codecs.splice(event.target.value, 1);
         codecs.unshift(selectedCodec);
         localStorage.setItem("codec", JSON.stringify(codecs));
@@ -66,11 +66,12 @@ export default function SipInput({
     }, [setCodecSupport]);
 
     useEffect(() => {
-        if (status === "registered") {
+        if (status !== "registered") {
             setIsRegister(true);
         } else if (status === "disconnected") {
             setIsRegister(false);
         }
+        console.log("Demo");
     }, [status]);
 
     return (

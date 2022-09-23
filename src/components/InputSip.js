@@ -11,7 +11,7 @@ const SelectCodec = ({ codecSupport }) => {
     const handleCodecChange = (event) => {
         const codecs = codecSupport;
         const selectedCodec = codecs[event.target.value];
-        console.log(selectedCodec)
+        console.log(selectedCodec);
         codecs.splice(event.target.value, 1);
         codecs.unshift(selectedCodec);
         localStorage.setItem("codec", JSON.stringify(codecs));
@@ -37,6 +37,7 @@ export default function SipInput({
     handleUnRegister,
     handleCall,
     handleHangUp,
+    handleRenegotiate,
     isVideoMuted,
     isMicrophoneMuted,
     handleMuteVideo,
@@ -66,12 +67,11 @@ export default function SipInput({
     }, [setCodecSupport]);
 
     useEffect(() => {
-        if (status !== "registered") {
+        if (status === "registered") {
             setIsRegister(true);
         } else if (status === "disconnected") {
             setIsRegister(false);
         }
-        console.log("Demo");
     }, [status]);
 
     return (
@@ -127,6 +127,9 @@ export default function SipInput({
             </button>
             <button className="btn btn-warning w-full m-2" onClick={handleHangUp}>
                 HangUp
+            </button>
+            <button className="btn btn-info w-full m-2" onClick={handleRenegotiate}>
+                Renegotiate
             </button>
             <SelectCodec codecSupport={codecSupport} />
         </div>

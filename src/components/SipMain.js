@@ -87,13 +87,13 @@ export default function SipMain() {
 
             if (ev1.originator === "local") {
                 newSession.connection.addEventListener("addstream", (event) => {
-                    const transceiver = event.currentTarget
-                        .getTransceivers()
-                        .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+                    // const transceiver = event.currentTarget
+                    //     .getTransceivers()
+                    //     .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
 
-                    const codecs = JSON.parse(localStorage.getItem("codec"));
-                    transceiver.setCodecPreferences(codecs);
-                    console.log("setCodec", codecs);
+                    // const codecs = JSON.parse(localStorage.getItem("codec"));
+                    // transceiver.setCodecPreferences(codecs);
+                    // console.log("setCodec", codecs);
                     setRemoteStream((remoteStream) => [
                         ...remoteStream,
                         {
@@ -213,6 +213,7 @@ export default function SipMain() {
             eventHandlers: eventHandlers,
             mediaStream: mediaStream,
             pcConfig: pcConfig,
+            sessionTimersExpires: 9999,
         };
         userAgent.call("sip:" + destination + "@" + profileData[profileSelect].server, options);
     };
@@ -228,6 +229,10 @@ export default function SipMain() {
         if (userAgent !== null) {
             userAgent.stop();
         }
+    };
+
+    const handleRenegotiate = () => {
+        newSession.renegotiate();
     };
 
     const handleCall = () => {
@@ -259,6 +264,7 @@ export default function SipMain() {
         _session.session.session.answer({
             mediaStream: mediaStream,
             pcConfig: pcConfig,
+            sessionTimersExpires: 9999,
         });
         _session.view = false;
 
@@ -305,6 +311,7 @@ export default function SipMain() {
                     handleUnRegister={handleUnRegister}
                     handleCall={handleCall}
                     handleHangUp={handleHangUp}
+                    handleRenegotiate={handleRenegotiate}
                     isVideoMuted={localVideoStatus.video}
                     isMicrophoneMuted={localVideoStatus.audio}
                     handleMuteVideo={handleMuteVideo}

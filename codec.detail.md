@@ -40,6 +40,10 @@ Codec iOS(15.7) Safari iPad
 
 Codec MacOS Safari Support
 
+```
+ที่ใช้ได้จะมี 42e01f
+```
+
 ```json
 [
     {

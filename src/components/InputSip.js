@@ -56,6 +56,8 @@ export default function SipInput({
         if (supportsSetCodecPreferences) {
             const codecStack = [];
             const { codecs } = RTCRtpSender.getCapabilities("video");
+            console.log(codecs);
+            console.table(codecs);
             codecs.forEach((codec) => {
                 if (["video/red", "video/ulpfec", "video/rtx"].includes(codec.mimeType)) {
                     return;

@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, createRef } from "react";
+import { isIOS, isSafari, isChrome, isFirefox } from "react-device-detect";
 import JsSIP from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
@@ -37,8 +38,14 @@ export default function SipMain() {
     }, []);
 
     useEffect(() => {
-        console.log("remoteStream", remoteStream);
-    }, [remoteStream]);
+        const table = {
+            iOS: isIOS,
+            Safari: isSafari,
+            Chrome: isChrome,
+            Firefox: isFirefox,
+        };
+        console.table(table);
+    }, []);
 
     const registerSip = () => {
         console.log("registerSip");

@@ -12,9 +12,9 @@ import adapter from "webrtc-adapter";
 let userAgent = null;
 let newSession = null;
 const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
+// const iceServers = [{ urls: "stun:stun3.l.google.com:19302" }];
 const pcConfig = {
     iceServers: iceServers,
-    SdpSemantics: "plan-b",
 };
 
 export default function SipMain() {
@@ -95,21 +95,38 @@ export default function SipMain() {
 
             if (ev1.originator === "local") {
                 newSession.connection.addEventListener("addstream", (event) => {
-                    const transceiver = event.currentTarget
-                        .getTransceivers()
-                        .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+                    console.log(event);
+                    if (isSafari) {
+                        const transceiver = event.currentTarget
+                            .getTransceivers()
+                            .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+                        const codecTest = [
+                            {
+                                clockRate: 90000,
+                                mimeType: "video/H264",
+                                sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
+                            },
+                        ];
+                        const codecs = codecTest;
+                        console.log("setCodec", codecs);
+                        transceiver.setCodecPreferences(codecs);
+                    }
+                    if (isChrome) {
+                        const transceiver = event.currentTarget
+                            .getTransceivers()
+                            .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+                        const codecTest = [
+                            {
+                                clockRate: 90000,
+                                mimeType: "video/H264",
+                                sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
+                            },
+                        ];
+                        const codecs = codecTest;
+                        console.log("setCodec", codecs);
+                        transceiver.setCodecPreferences(codecs);
+                    }
 
-                    const codecTest = [
-                        {
-                            clockRate: 90000,
-                            mimeType: "video/H264",
-                            sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f",
-                        },
-                    ];
-
-                    const codecs = codecTest;
-                    console.log("setCodec", codecs);
-                    transceiver.setCodecPreferences(codecs);
                     setRemoteStream((remoteStream) => [
                         ...remoteStream,
                         {
@@ -157,6 +174,9 @@ export default function SipMain() {
                 }
             });
             newSession.on("addstream", (event) => {
+                console.log(event);
+            });
+            newSession.on("sdp", (event) => {
                 console.log(event);
             });
             newSession.on("peerconnection", function (ev2) {

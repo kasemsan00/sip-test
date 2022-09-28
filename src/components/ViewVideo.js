@@ -58,7 +58,13 @@ export default function ViewVideo({ callOutRef, sessionData, remoteStream }) {
                                     <CallEndIcon fontSize="large" color="error" />
                                 </div>
                             </div>
-                            <video autoPlay playsInline className="w-full h-full rounded-2xl bg-slate-400" ref={remoteVideoRef[item.callID]}></video>
+                            <video
+                                autoPlay
+                                playsInline
+                                controls
+                                className="w-full h-full rounded-2xl bg-slate-400"
+                                ref={remoteVideoRef[item.callID]}
+                            ></video>
                         </div>
                     );
                 })}

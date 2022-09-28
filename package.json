@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "dev": "next dev",
+        "dev": "next dev -p 4100",
         "build": "next build",
         "lint": "next lint",
         "start": "next start"
@@ -10,7 +10,7 @@
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@mui/icons-material": "^5.10.6",
-        "@mui/material": "^5.10.6",
+        "@mui/material": "^5.10.7",
         "@reduxjs/toolkit": "^1.8.5",
         "animate.css": "^4.1.1",
         "daisyui": "^2.31.0",
@@ -21,8 +21,8 @@
         "react-daisyui": "^2.4.2",
         "react-dom": "^18.2.0",
         "react-redux": "^8.0.4",
-        "sip.js": "^0.20.0",
-        "vercel": "^28.4.2",
+        "sip.js": "^0.20.1",
+        "vercel": "^28.4.4",
         "webrtc-adapter": "^8.1.2"
     },
     "name": "sip-demo",

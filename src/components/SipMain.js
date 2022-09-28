@@ -13,6 +13,7 @@ let newSession = null;
 const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
 const pcConfig = {
     iceServers: iceServers,
+    SdpSemantics: "plan-b",
 };
 
 export default function SipMain() {
@@ -87,13 +88,21 @@ export default function SipMain() {
 
             if (ev1.originator === "local") {
                 newSession.connection.addEventListener("addstream", (event) => {
-                    // const transceiver = event.currentTarget
-                    //     .getTransceivers()
-                    //     .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+                    const transceiver = event.currentTarget
+                        .getTransceivers()
+                        .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
 
-                    // const codecs = JSON.parse(localStorage.getItem("codec"));
-                    // transceiver.setCodecPreferences(codecs);
-                    // console.log("setCodec", codecs);
+                    const codecTest = [
+                        {
+                            clockRate: 90000,
+                            mimeType: "video/H264",
+                            sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f",
+                        },
+                    ];
+
+                    const codecs = codecTest;
+                    console.log("setCodec", codecs);
+                    transceiver.setCodecPreferences(codecs);
                     setRemoteStream((remoteStream) => [
                         ...remoteStream,
                         {

@@ -47,25 +47,21 @@ Codec MacOS Safari Support
 ```json
 [
     {
-        // ใช้ได้
         "clockRate": 90000,
         "mimeType": "video/H264",
         "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f"
     },
     {
-        // ใช้ไม่ได้จอดำ
         "clockRate": 90000,
         "mimeType": "video/H264",
         "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=640c1f"
     },
     {
-        // ใช้ไม่ได้จอดำ
         "clockRate": 90000,
         "mimeType": "video/H264",
         "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=640c1f"
     },
     {
-        // ใช้ได้
         "clockRate": 90000,
         "mimeType": "video/H264",
         "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f"

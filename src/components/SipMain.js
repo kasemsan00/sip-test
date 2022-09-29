@@ -111,21 +111,21 @@ export default function SipMain() {
                         console.log("setCodec", codecs);
                         transceiver.setCodecPreferences(codecs);
                     }
-                    if (isChrome) {
-                        const transceiver = event.currentTarget
-                            .getTransceivers()
-                            .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
-                        const codecTest = [
-                            {
-                                clockRate: 90000,
-                                mimeType: "video/H264",
-                                sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
-                            },
-                        ];
-                        const codecs = codecTest;
-                        console.log("setCodec", codecs);
-                        transceiver.setCodecPreferences(codecs);
-                    }
+                    // if (isChrome) {
+                    //     const transceiver = event.currentTarget
+                    //         .getTransceivers()
+                    //         .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+                    //     const codecTest = [
+                    //         {
+                    //             clockRate: 90000,
+                    //             mimeType: "video/H264",
+                    //             sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
+                    //         },
+                    //     ];
+                    //     const codecs = codecTest;
+                    //     console.log("setCodec", codecs);
+                    //     transceiver.setCodecPreferences(codecs);
+                    // }
 
                     setRemoteStream((remoteStream) => [
                         ...remoteStream,

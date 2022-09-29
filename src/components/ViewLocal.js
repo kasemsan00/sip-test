@@ -12,11 +12,22 @@ export default function ViewLocal({ isVideoMuted, isMicrophoneMuted, handleMuteV
     const localVideoRef = useRef(null);
     const controlLocalRef = useRef(null);
 
+    // video: {
+    //     width: { exact: 320 },
+    //     height: { exact: 240 },
+    //     frameRate: { ideal: 15, max: 15 },
+    // },
+
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-            dispatch(setLocalStream(stream));
-            localVideoRef.current.srcObject = stream;
-        });
+        navigator.mediaDevices
+            .getUserMedia({
+                video: true,
+                audio: true,
+            })
+            .then((stream) => {
+                dispatch(setLocalStream(stream));
+                localVideoRef.current.srcObject = stream;
+            });
     }, [dispatch]);
 
     return (

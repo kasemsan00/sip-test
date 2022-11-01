@@ -14,7 +14,7 @@ export default function Setting() {
 
     return (
         <div className="w-full mx-1 flex">
-            <div className="cursor-pointer flex flex-1 justify-center items-center" onClick={toggleVisible}>
+            <div className="cursor-pointer flex flex-1" onClick={toggleVisible}>
                 <SettingsTwoToneIcon color="primary" />
             </div>
             <Modal open={visible}>

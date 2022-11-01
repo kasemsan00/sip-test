@@ -49,11 +49,12 @@ export default function SipInput({
     const status = useSelector((state) => state.registerStatus);
     const [codecSupport, setCodecSupport] = useState([]);
     const [isRegister, setIsRegister] = useState(false);
+    const [text, setText] = useState("");
 
     useEffect(() => {
         const supportsSetCodecPreferences = window.RTCRtpTransceiver && "setCodecPreferences" in window.RTCRtpTransceiver.prototype;
         console.log("supportsSetCodecPreferences", supportsSetCodecPreferences);
-        console.log(RTCRtpSender.getCapabilities("video"));
+        // console.log(RTCRtpSender.getCapabilities("video"));
         // const { codecs } = RTCRtpSender.getCapabilities("video");
         // console.log(codecs);
         // if (supportsSetCodecPreferences) {
@@ -78,6 +79,17 @@ export default function SipInput({
             setIsRegister(false);
         }
     }, [status]);
+
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            sendMessage(text);
+            setText("");
+        }
+    };
+
+    const sendMessage = (text) => {
+        console.log(text);
+    };
 
     return (
         <div className="flex w-[250px] px-3 h-full flex-col items-center self-start ">
@@ -127,16 +139,23 @@ export default function SipInput({
                     />
                 </InputGroup>
             </Form>
-            <button className="btn btn-success w-full m-2" onClick={handleCall}>
+            <button className="btn btn-success w-full m-1" onClick={handleCall}>
                 Call
             </button>
-            <button className="btn btn-warning w-full m-2" onClick={handleHangUp}>
+            <button className="btn btn-warning w-full m-1" onClick={handleHangUp}>
                 HangUp
             </button>
-            <button className="btn btn-info w-full m-2" onClick={handleRenegotiate}>
+            <button className="btn btn-info w-full m-1" onClick={handleRenegotiate}>
                 Renegotiate
             </button>
-            <SelectCodec codecSupport={codecSupport} />
+            {/* <SelectCodec codecSupport={codecSupport} /> */}
+            <input
+                className="input input-bordered w-full m-1 outline-0"
+                type="text"
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+                onKeyDown={handleKeyDown}
+            />
         </div>
     );
 }

@@ -45,6 +45,7 @@ export default function SipInput({
     destination,
     setDestination,
     setCodec,
+    sendMessage,
 }) {
     const status = useSelector((state) => state.registerStatus);
     const [codecSupport, setCodecSupport] = useState([]);
@@ -85,10 +86,6 @@ export default function SipInput({
             sendMessage(text);
             setText("");
         }
-    };
-
-    const sendMessage = (text) => {
-        console.log(text);
     };
 
     return (

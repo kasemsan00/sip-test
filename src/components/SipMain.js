@@ -338,6 +338,9 @@ export default function SipMain() {
             }
         }
     };
+    const sendMessage = (text) => {
+        userAgent.sendMessage("sip:" + destination + "@" + profileData[profileSelect].server, text);
+    };
 
     return (
         <>
@@ -354,6 +357,7 @@ export default function SipMain() {
                     handleMutedMicrophone={handleMutedMicrophone}
                     destination={destination}
                     setDestination={setDestination}
+                    sendMessage={sendMessage}
                 />
                 <ViewVideo callOutRef={callOutRef} sessionData={sessionData} remoteStream={remoteStream} />
             </div>

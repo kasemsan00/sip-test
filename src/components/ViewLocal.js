@@ -22,9 +22,10 @@ export default function ViewLocal({ isVideoMuted, isMicrophoneMuted, handleMuteV
         navigator.mediaDevices
             .getUserMedia({
                 video: true,
-                audio: true,
+                audio: false,
             })
             .then((stream) => {
+                console.log(stream);
                 dispatch(setLocalStream(stream));
                 localVideoRef.current.srcObject = stream;
             });

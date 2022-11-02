@@ -278,7 +278,9 @@ export default function SipMain() {
         localStorage.setItem("destination", destination);
         callOutRef.current.innerText = "Call " + destination;
         callOutRef.current.classList.replace("hidden", "fixed");
+
         sipCall();
+        console.log("🚀 ~ file: SipMain.js ~ line 283 ~ handleCall ~ sipCall", sipCall);
         // } catch (error) {
         //     console.log(error);
         // }

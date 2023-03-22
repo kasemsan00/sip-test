@@ -10,15 +10,15 @@ import proxyServerSlice from "./slices/proxyServerSlice";
 const middleware = [reduxThunk];
 
 const store = configureStore({
-    reducer: {
-        proxyServer: proxyServerSlice,
-        registerStatus: registerStatusSlice,
-        profileSelect: profileSelectSlice,
-        profileData: profileDataSlice,
-        mediaStream: mediaStreamSlice,
-        userAgent: userAgentSlice,
-    },
-    middleware,
+  reducer: {
+    proxyServer: proxyServerSlice,
+    registerStatus: registerStatusSlice,
+    profileSelect: profileSelectSlice,
+    profileData: profileDataSlice,
+    mediaStream: mediaStreamSlice,
+    userAgent: userAgentSlice,
+  },
+  middleware,
 });
 
 export default store;

@@ -19,10 +19,7 @@ export default function ViewLocal({ isVideoMuted, isMicrophoneMuted, handleMuteV
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({
-        video: {
-          width: 320,
-          height: 320,
-        },
+        video: true,
         audio: true,
       })
       .then((stream) => {

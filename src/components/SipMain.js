@@ -25,6 +25,7 @@ const iceServers = [
     credential: "tE2DajzSJwnsSbc123",
   },
 ];
+console.log(iceServers);
 // urls : "turn:global.turn.twilio.com:3478?transport=udp", turn:global.turn.twilio.com:3478?transport=tcp, turn:global.turn.twilio.com:443?transport=tcp], iceTransportPolicy: all, bundlePolicy: max-bundle, rtcpMuxPolicy: require, iceCandidatePoolSize: 0 }
 
 // const iceServers = [{ urls: "stun:stun3.l.google.com:19302" }];

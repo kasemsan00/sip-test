@@ -58,19 +58,19 @@ export default function SipInput({
     // console.log(RTCRtpSender.getCapabilities("video"));
     // const { codecs } = RTCRtpSender.getCapabilities("video");
     // console.log(codecs);
-    // if (supportsSetCodecPreferences) {
-    //     const codecStack = [];
-    //     const { codecs } = RTCRtpSender.getCapabilities("video");
-    //     console.log(codecs);
-    //     console.table(codecs);
-    //     codecs.forEach((codec) => {
-    //         if (["video/red", "video/ulpfec", "video/rtx"].includes(codec.mimeType)) {
-    //             return;
-    //         }
-    //         codecStack.push(codec);
-    //     });
-    //     setCodecSupport(codecStack);
-    // }
+    if (supportsSetCodecPreferences) {
+      const codecStack = [];
+      const { codecs } = RTCRtpSender.getCapabilities("video");
+      console.log(codecs);
+      console.table(codecs);
+      codecs.forEach((codec) => {
+        if (["video/red", "video/ulpfec", "video/rtx"].includes(codec.mimeType)) {
+          return;
+        }
+        codecStack.push(codec);
+      });
+      setCodecSupport(codecStack);
+    }
   }, [setCodecSupport]);
 
   useEffect(() => {

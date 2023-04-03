@@ -105,6 +105,7 @@ export default function SipMain() {
       sockets: [socket],
       uri: "sip:" + profileData[profileSelect].extension + "@" + profileData[profileSelect].server,
       password: profileData[profileSelect].password,
+      traceSip: true,
     };
 
     userAgent = new JsSIP.UA(configuration);
@@ -146,7 +147,7 @@ export default function SipMain() {
 
       if (ev1.originator === "local") {
         newSession.connection.addEventListener("addstream", (event) => {
-          console.log(event);
+          console.log("SetCodec");
           if (isSafari) {
             const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
             const codecs = [
@@ -159,27 +160,29 @@ export default function SipMain() {
             console.log("setCodec", codecs);
             transceiver.setCodecPreferences(codecs);
           }
-          // if (isChrome) {
-          //     const transceiver = event.currentTarget
-          //         .getTransceivers()
-          //         .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
-          //     const codecTest = [
-          //         {
-          //             clockRate: 90000,
-          //             mimeType: "video/H264",
-          //             sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
-          //         },
-          //     ];
-          //     const codecs = codecTest;
-          //     console.log("setCodec", codecs);
-          //     transceiver.setCodecPreferences(codecs);
-          // }
+          if (isChrome) {
+            const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+            const codecs = [
+              {
+                clockRate: 90000,
+                mimeType: "video/H264",
+                sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
+              },
+            ];
+            console.log("setCodec", codecs);
+            transceiver.setCodecPreferences(codecs);
+          }
+
+          // console.log(event.stream);
+          const video_track = mediaStream.getVideoTracks()[0];
+          let testMediaStream = new MediaStream();
+          testMediaStream.addTrack(video_track);
 
           setRemoteStream((remoteStream) => [
             ...remoteStream,
             {
               callID: callID,
-              stream: event.stream,
+              stream: testMediaStream,
             },
           ]);
         });
@@ -241,8 +244,8 @@ export default function SipMain() {
         };
         ev2.peerconnection.onremovestream = function (ev3) {
           console.log("setRemoteStream");
-          setRemoteStream((remoteStream) => remoteStream.filter((data) => data.callID != callID));
-          setSessionData((sessionData) => sessionData.filter((data) => data.callID != callID));
+          setRemoteStream((remoteStream) => remoteStream.filter((data) => data.callID !== callID));
+          setSessionData((sessionData) => sessionData.filter((data) => data.callID !== callID));
         };
       });
     });
@@ -312,11 +315,21 @@ export default function SipMain() {
     if (type === "stun") {
       iceServers = [{ urls: url }];
     }
+    // return {
+    //   iceServers: iceServers,
+    //   iceTransportPolicy: pcConfigSetting.iceTransportPolicy,
+    //   rtcpMuxPolicy: pcConfigSetting.rtcpMuxPolicy,
+    //   bundlePolicy: pcConfigSetting.bundlePolicy,
+    //   gatheringTimeout: 2000,
+    //   iceCandidatePoolSize: parseInt(pcConfigSetting.iceCandidatePoolSize),
+    // };
     return {
       iceServers: iceServers,
-      iceTransportPolicy: pcConfigSetting.iceTransportPolicy,
+      iceTransportPolicy: "relay",
       rtcpMuxPolicy: pcConfigSetting.rtcpMuxPolicy,
-      iceCandidatePoolSize: parseInt(pcConfigSetting.iceCandidatePoolSize),
+      bundlePolicy: pcConfigSetting.bundlePolicy,
+      gatheringTimeout: 2000,
+      iceCandidatePoolSize: 0,
     };
   };
 

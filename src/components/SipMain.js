@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef, createRef } from "react";
-import { isIOS, isSafari, isChrome, isFirefox } from "react-device-detect";
+import { useEffect, useRef, useState } from "react";
+import { isChrome, isFirefox, isIOS, isSafari } from "react-device-detect";
 import JsSIP from "jssip";
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
@@ -7,40 +7,17 @@ import IncomingCall from "./IncomingCall";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegisterStatus } from "../redux/slices/registerStatusSlice";
 // import CodecHandler from "../middleware/CodecHandler";
-import adapter from "webrtc-adapter";
+import { setProxyPassword, setProxyServer, setProxyUrl, setProxyUsername } from "../redux/slices/proxyServerSlice";
+import { setBundlePolicy, setIceCandidatePoolSize, setIceTransportPolicy, setRtcpMuxPolicy } from "../redux/slices/pcConfigSlice";
 
 let userAgent = null;
 let newSession = null;
-const iceServers = [{ urls: "turn:turn.ttrs.in.th?transport=tcp", username: "turn01", credential: "Test1234" }];
-// const iceServers = [{ urls: "stun:global.stun.twilio.com:3478" }];
-// const iceServers = [
-//   {
-//     urls: "turn:global.turn.twilio.com:3478?transport=udp",
-//     username: "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
-//     credential: "tE2DajzSJwnsSbc123",
-//   },
-//   {
-//     urls: "turn:global.turn.twilio.com:443?transport=tcp",
-//     username: "dc2d2894d5a9023620c467b0e71cfa6a35457e6679785ed6ae9856fe5bdfa269",
-//     credential: "tE2DajzSJwnsSbc123",
-//   },
-// ];
-console.log(iceServers);
-// urls : "turn:global.turn.twilio.com:3478?transport=udp", turn:global.turn.twilio.com:3478?transport=tcp, turn:global.turn.twilio.com:443?transport=tcp], iceTransportPolicy: all, bundlePolicy: max-bundle, rtcpMuxPolicy: require, iceCandidatePoolSize: 0 }
-
-// const iceServers = [{ urls: "stun:stun3.l.google.com:19302" }];
-const pcConfig = {
-  iceServers: iceServers,
-  iceTransportPolicy: "all",
-  rtcpMuxPolicy: "require",
-  iceCandidatePoolSize: 0,
-};
-
-// { iceServers: [stun:global.stun.twilio.com:3478, turn:global.turn.twilio.com:3478?transport=udp, turn:global.turn.twilio.com:3478?transport=tcp, turn:global.turn.twilio.com:443?transport=tcp], iceTransportPolicy: all, bundlePolicy: max-bundle, rtcpMuxPolicy: require, iceCandidatePoolSize: 0 }
 
 export default function SipMain() {
   const dispatch = useDispatch();
 
+  const proxyServer = useSelector((state) => state.proxyServer);
+  const pcConfigSetting = useSelector((state) => state.pcConfig);
   const registerStatus = useSelector((state) => state.registerStatus);
   const profileSelect = useSelector((state) => state.profileSelect);
   const profileData = useSelector((state) => state.profileData);
@@ -56,7 +33,60 @@ export default function SipMain() {
     if (localStorage.getItem("destination") !== null) {
       setDestination(localStorage.getItem("destination"));
     }
-  }, []);
+
+    const pcConfig = {
+      iceTransportPolicy: "all",
+      rtcpMuxPolicy: "require",
+      bundlePolicy: "balanced",
+      iceCandidatePoolSize: 0,
+    };
+
+    if (localStorage.getItem("iceTransportPolicy") === null) {
+      dispatch(setIceTransportPolicy(pcConfig.iceTransportPolicy));
+      localStorage.setItem("iceTransportPolicy", pcConfig.iceTransportPolicy);
+    } else {
+      dispatch(setIceTransportPolicy(localStorage.getItem("iceTransportPolicy")));
+    }
+    if (localStorage.getItem("rtcpMuxPolicy") === null) {
+      dispatch(setRtcpMuxPolicy(pcConfig.rtcpMuxPolicy));
+      localStorage.setItem("rtcpMuxPolicy", pcConfig.rtcpMuxPolicy);
+    } else {
+      dispatch(setRtcpMuxPolicy(localStorage.getItem("rtcpMuxPolicy")));
+    }
+    if (localStorage.getItem("bundlePolicy") === null) {
+      dispatch(setBundlePolicy(pcConfig.bundlePolicy));
+      localStorage.setItem("bundlePolicy", pcConfig.bundlePolicy);
+    } else {
+      dispatch(setBundlePolicy(localStorage.getItem("bundlePolicy")));
+    }
+    if (localStorage.getItem("iceCandidatePoolSize") === null) {
+      dispatch(setIceCandidatePoolSize(pcConfig.iceCandidatePoolSize));
+      localStorage.setItem("iceCandidatePoolSize", pcConfig.iceCandidatePoolSize);
+    } else {
+      dispatch(setIceCandidatePoolSize(localStorage.getItem("iceCandidatePoolSize")));
+    }
+    if (localStorage.getItem("proxyServer") === null) {
+      const init = {
+        type: "turn",
+        url: "turn:turn.ttrs.in.th?transport=tcp",
+        username: "turn01",
+        password: "Test1234",
+      };
+      dispatch(setProxyServer(init.type));
+      dispatch(setProxyUrl(init.url));
+      dispatch(setProxyUsername(init.username));
+      dispatch(setProxyPassword(init.password));
+      localStorage.setItem("proxyServer", init.type);
+      localStorage.setItem("proxyUrl", init.url);
+      localStorage.setItem("proxyUsername", init.username);
+      localStorage.setItem("proxyPassword", init.password);
+    } else {
+      dispatch(setProxyServer(localStorage.getItem("proxyServer")));
+      dispatch(setProxyUrl(localStorage.getItem("proxyUrl")));
+      dispatch(setProxyUsername(localStorage.getItem("proxyUsername")));
+      dispatch(setProxyPassword(localStorage.getItem("proxyPassword")));
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     const table = {
@@ -70,8 +100,8 @@ export default function SipMain() {
 
   const registerSip = () => {
     console.log("registerSip");
-    var socket = new JsSIP.WebSocketInterface(profileData[profileSelect].websocket);
-    var configuration = {
+    const socket = new JsSIP.WebSocketInterface(profileData[profileSelect].websocket);
+    const configuration = {
       sockets: [socket],
       uri: "sip:" + profileData[profileSelect].extension + "@" + profileData[profileSelect].server,
       password: profileData[profileSelect].password,
@@ -119,14 +149,13 @@ export default function SipMain() {
           console.log(event);
           if (isSafari) {
             const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
-            const codecTest = [
+            const codecs = [
               {
                 clockRate: 90000,
                 mimeType: "video/H264",
                 sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
               },
             ];
-            const codecs = codecTest;
             console.log("setCodec", codecs);
             transceiver.setCodecPreferences(codecs);
           }
@@ -264,13 +293,31 @@ export default function SipMain() {
       },
     };
 
-    var options = {
+    const options = {
       eventHandlers: eventHandlers,
       mediaStream: mediaStream,
-      pcConfig: pcConfig,
+      pcConfig: pcConfig(),
       sessionTimersExpires: 9999,
     };
+    console.log(options);
     userAgent.call("sip:" + destination + "@" + profileData[profileSelect].server, options);
+  };
+
+  const pcConfig = () => {
+    const { type, url, username, password } = proxyServer;
+    let iceServers = {};
+    if (type === "turn") {
+      iceServers = [{ urls: url, username: username, credential: password }];
+    }
+    if (type === "stun") {
+      iceServers = [{ urls: url }];
+    }
+    return {
+      iceServers: iceServers,
+      iceTransportPolicy: pcConfigSetting.iceTransportPolicy,
+      rtcpMuxPolicy: pcConfigSetting.rtcpMuxPolicy,
+      iceCandidatePoolSize: parseInt(pcConfigSetting.iceCandidatePoolSize),
+    };
   };
 
   const handleRegister = () => {
@@ -291,18 +338,13 @@ export default function SipMain() {
   };
 
   const handleCall = () => {
-    // try {
     console.log("register status", registerStatus);
     if (registerStatus !== "registered") return null;
     localStorage.setItem("destination", destination);
     callOutRef.current.innerText = "Call " + destination;
     callOutRef.current.classList.replace("hidden", "fixed");
-
     sipCall();
     console.log("🚀 ~ file: SipMain.js ~ line 283 ~ handleCall ~ sipCall", sipCall);
-    // } catch (error) {
-    //     console.log(error);
-    // }
   };
   const handleHangUp = async () => {
     try {
@@ -320,7 +362,7 @@ export default function SipMain() {
     console.log("callID", _session);
     _session.session.session.answer({
       mediaStream: mediaStream,
-      pcConfig: pcConfig,
+      pcConfig: pcConfig(),
       sessionTimersExpires: 9999,
     });
     _session.view = false;

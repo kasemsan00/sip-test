@@ -128,7 +128,7 @@ export default function SipInput({
           </span>
           <Input
             type="text"
-            placeholder="Type here"
+            placeholder="Call Number"
             className="input input-bordered input-info w-full text-center"
             value={destination}
             onChange={(event) => setDestination(event.target.value)}

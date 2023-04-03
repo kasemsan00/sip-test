@@ -3,6 +3,7 @@ import { Button, Modal, Tabs, Tab } from "react-daisyui";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import SipAccounts from "./SipAccount";
 import Proxy from "./Proxy";
+import PcConfig from "./PcConfig";
 
 export default function Setting() {
   const [visible, setVisible] = useState(false);
@@ -27,20 +28,17 @@ export default function Setting() {
               Sip Accounts
             </a>
             <a className={`tab tab-bordered ${activeTab === 1 ? `tab-active` : null}`} onClick={() => setActiveTab(1)}>
-              Proxy
+              PC Config
             </a>
           </div>
           {activeTab === 0 ? <SipAccounts visible={visible} /> : null}
-          {activeTab === 1 ? <Proxy /> : null}
+          {activeTab === 1 ? (
+            <>
+              <Proxy />
+              <PcConfig />
+            </>
+          ) : null}
         </Modal.Body>
-        {/* <Modal.Actions>
-                    <Button color="ghost" onClick={toggleVisible}>
-                        Cancel
-                    </Button>
-                    <Button color="success" onClick={toggleVisible}>
-                        Save
-                    </Button>
-                </Modal.Actions> */}
       </Modal>
     </div>
   );

@@ -8,7 +8,7 @@ export default function PcConfig() {
   return (
     <>
       <InputGroup size="sm mt-1">
-        <span className="w-[200px]">iceTransportPolicy</span>
+        <span className="w-full">iceTransportPolicy</span>
         <Input
           className="w-full"
           size="sm"
@@ -20,7 +20,7 @@ export default function PcConfig() {
         />
       </InputGroup>
       <InputGroup size="sm mt-1">
-        <span className="w-[200px]">rtcpMuxPolicy</span>
+        <span className="w-full">rtcpMuxPolicy</span>
         <Input
           className="w-full"
           size="sm"
@@ -32,7 +32,7 @@ export default function PcConfig() {
         />
       </InputGroup>
       <InputGroup size="sm mt-1">
-        <span className="w-[200px]">bundlePolicy</span>
+        <span className="w-full">bundlePolicy</span>
         <Input
           type="text"
           className="w-full"
@@ -45,7 +45,7 @@ export default function PcConfig() {
         />
       </InputGroup>
       <InputGroup size="sm mt-1">
-        <span className="w-[200px]">iceCandidatePoolSize</span>
+        <span className="w-full">iceCandidatePoolSize</span>
         <Input
           type="number"
           className="w-full"

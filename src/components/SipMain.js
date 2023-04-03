@@ -173,16 +173,19 @@ export default function SipMain() {
             transceiver.setCodecPreferences(codecs);
           }
 
-          // console.log(event.stream);
           const video_track = mediaStream.getVideoTracks()[0];
-          let testMediaStream = new MediaStream();
-          testMediaStream.addTrack(video_track);
+          const audio_track = mediaStream.getAudioTracks()[0];
+          let testVideoMediaStream = new MediaStream();
+          testVideoMediaStream.addTrack(video_track);
+          let testAudioMediaStream = new MediaStream();
+          testAudioMediaStream.addTrack(audio_track);
 
           setRemoteStream((remoteStream) => [
             ...remoteStream,
             {
               callID: callID,
-              stream: testMediaStream,
+              stream: testVideoMediaStream,
+              steamAudio: testAudioMediaStream,
             },
           ]);
         });

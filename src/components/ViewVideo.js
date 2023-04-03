@@ -3,17 +3,23 @@ import { useEffect, createRef, useState } from "react";
 import CallEndIcon from "@mui/icons-material/CallEnd";
 
 export default function ViewVideo({ callOutRef, sessionData, remoteStream }) {
+  const [remoteAudioRef, setRemoteAudioRef] = useState([]);
   const [remoteVideoRef, setRemoteVideoRef] = useState([]);
 
   useEffect(() => {
     if (sessionData.length > 0) {
       const refVideo = [];
+      const refAudio = [];
       sessionData.forEach((element) => {
         if (refVideo[element.callID] === undefined) {
           refVideo[element.callID] = createRef();
         }
+        if (refAudio[element.callID] === undefined) {
+          refAudio[element.callID] = createRef();
+        }
       });
       setRemoteVideoRef(refVideo);
+      setRemoteAudioRef(refAudio);
     }
   }, [sessionData]);
 
@@ -62,6 +68,7 @@ export default function ViewVideo({ callOutRef, sessionData, remoteStream }) {
                 className="w-full h-full rounded-2xl bg-slate-400"
                 ref={remoteVideoRef[item.callID]}
               ></video>
+              <audio autoPlay playsInline controls={false} ref={remoteAudioRef[item.callID]}></audio>
             </div>
           );
         })}

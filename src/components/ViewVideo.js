@@ -41,9 +41,9 @@ export default function ViewVideo({ callOutRef, sessionData, remoteStream }) {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-full pt-3 pb-4 bg-slate-500 items-center">
+    <div className="flex flex-col w-full max-w-full bg-slate-500 items-center">
       <div className="hidden top-[40%] justify-center items-center text-6xl bg-gray-800 text-white p-3 rounded-xl shadow-md" ref={callOutRef}></div>
-      <div className="flex flex-1 h-full w-full self-center items-center justify-center p-3">
+      <div className="flex flex-1 h-full w-full self-center items-center justify-center p-1">
         {sessionData.map((item, index) => {
           return (
             <div

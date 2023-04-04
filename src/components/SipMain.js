@@ -328,7 +328,7 @@ export default function SipMain() {
     // };
     return {
       iceServers: iceServers,
-      iceTransportPolicy: "relay",
+      iceTransportPolicy: "all",
       rtcpMuxPolicy: pcConfigSetting.rtcpMuxPolicy,
       bundlePolicy: pcConfigSetting.bundlePolicy,
       gatheringTimeout: 2000,

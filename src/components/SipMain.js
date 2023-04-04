@@ -173,8 +173,8 @@ export default function SipMain() {
             transceiver.setCodecPreferences(codecs);
           }
 
-          const video_track = mediaStream.getVideoTracks()[0];
-          const audio_track = mediaStream.getAudioTracks()[0];
+          const video_track = event.stream.getVideoTracks()[0];
+          const audio_track = event.stream.getAudioTracks()[0];
           let testVideoMediaStream = new MediaStream();
           testVideoMediaStream.addTrack(video_track);
           let testAudioMediaStream = new MediaStream();
@@ -204,8 +204,8 @@ export default function SipMain() {
 
       newSession.on("ended", (event) => {
         console.log("ended", callID);
-        setRemoteStream((remoteStream) => remoteStream.filter((data) => data.callID != callID));
-        setSessionData((sessionData) => sessionData.filter((data) => data.callID != callID));
+        setRemoteStream((remoteStream) => remoteStream.filter((data) => data.callID !== callID));
+        setSessionData((sessionData) => sessionData.filter((data) => data.callID !== callID));
       });
       newSession.on("confirmed", function () {
         console.log("add localVideo");
@@ -255,7 +255,7 @@ export default function SipMain() {
   };
 
   const sipCall = () => {
-    if (registerStatus !== "registered") return null;
+    if (registerStatus.toString() !== "registered") return null;
     var eventHandlers = {
       progress: (e) => {
         callOutRef.current.innerText = "Call " + destination;

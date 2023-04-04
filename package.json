@@ -17,7 +17,6 @@
     "jssip": "^3.10.0",
     "lodash": "^4.17.21",
     "next": "latest",
-    "npm-check-updates": "^16.10.0",
     "react": "^18.2.0",
     "react-daisyui": "^3.0.3",
     "react-device-detect": "^2.2.3",

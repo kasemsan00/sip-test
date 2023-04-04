@@ -11,11 +11,6 @@ export default function ViewLocal({ isVideoMuted, isMicrophoneMuted, handleMuteV
   const dispatch = useDispatch();
   const localVideoRef = useRef(null);
   const controlLocalRef = useRef(null);
-  // video: {
-  //     width: { exact: 320 },
-  //     height: { exact: 240 },
-  //     frameRate: { ideal: 15, max: 15 },
-  // },
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({

@@ -148,18 +148,18 @@ export default function SipMain() {
       if (ev1.originator === "local") {
         newSession.connection.addEventListener("addstream", (event) => {
           console.log("SetCodec");
-          if (isSafari) {
-            const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
-            const codecs = [
-              {
-                clockRate: 90000,
-                mimeType: "video/H264",
-                sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
-              },
-            ];
-            console.log("setCodec", codecs);
-            transceiver.setCodecPreferences(codecs);
-          }
+          // if (isSafari) {
+          //   const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+          //   const codecs = [
+          //     {
+          //       clockRate: 90000,
+          //       mimeType: "video/H264",
+          //       sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
+          //     },
+          //   ];
+          //   console.log("setCodec", codecs);
+          //   transceiver.setCodecPreferences(codecs);
+          // }
           // if (isChrome) {
           //   const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
           //   const codecs = [
@@ -173,19 +173,19 @@ export default function SipMain() {
           //   transceiver.setCodecPreferences(codecs);
           // }
 
-          const video_track = event.stream.getVideoTracks()[0];
-          const audio_track = event.stream.getAudioTracks()[0];
-          let testVideoMediaStream = new MediaStream();
-          testVideoMediaStream.addTrack(video_track);
-          let testAudioMediaStream = new MediaStream();
-          testAudioMediaStream.addTrack(audio_track);
+          // const video_track = event.stream.getVideoTracks()[0];
+          // const audio_track = event.stream.getAudioTracks()[0];
+          // let testVideoMediaStream = new MediaStream();
+          // testVideoMediaStream.addTrack(video_track);
+          // let testAudioMediaStream = new MediaStream();
+          // testAudioMediaStream.addTrack(audio_track);
 
           setRemoteStream((remoteStream) => [
             ...remoteStream,
             {
               callID: callID,
-              stream: testVideoMediaStream,
-              steamAudio: testAudioMediaStream,
+              stream: event.stream,
+              steamAudio: null,
             },
           ]);
         });
@@ -231,7 +231,9 @@ export default function SipMain() {
         console.log(event);
       });
       newSession.on("sdp", (event) => {
-        console.log(event);
+        event.sdp = event.sdp.replace("SAVPF", "AVPF");
+        event.sdp = event.sdp.replace("SAVPF", "AVPF");
+        console.log(event.sdp);
       });
       newSession.on("peerconnection", function (ev2) {
         console.log(ev2);
@@ -256,7 +258,7 @@ export default function SipMain() {
 
   const sipCall = () => {
     if (registerStatus.toString() !== "registered") return null;
-    var eventHandlers = {
+    const eventHandlers = {
       progress: (e) => {
         callOutRef.current.innerText = "Call " + destination;
         console.log("call is in progress");

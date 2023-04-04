@@ -160,18 +160,18 @@ export default function SipMain() {
             console.log("setCodec", codecs);
             transceiver.setCodecPreferences(codecs);
           }
-          if (isChrome) {
-            const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
-            const codecs = [
-              {
-                clockRate: 90000,
-                mimeType: "video/H264",
-                sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
-              },
-            ];
-            console.log("setCodec", codecs);
-            transceiver.setCodecPreferences(codecs);
-          }
+          // if (isChrome) {
+          //   const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+          //   const codecs = [
+          //     {
+          //       clockRate: 90000,
+          //       mimeType: "video/H264",
+          //       sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
+          //     },
+          //   ];
+          //   console.log("setCodec", codecs);
+          //   transceiver.setCodecPreferences(codecs);
+          // }
 
           const video_track = event.stream.getVideoTracks()[0];
           const audio_track = event.stream.getAudioTracks()[0];

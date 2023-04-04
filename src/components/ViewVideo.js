@@ -64,7 +64,7 @@ export default function ViewVideo({ callOutRef, sessionData, remoteStream }) {
               <video
                 autoPlay
                 playsInline
-                controls={true}
+                controls={false}
                 className="w-full h-full rounded-2xl bg-slate-400"
                 ref={remoteVideoRef[item.callID]}
               ></video>

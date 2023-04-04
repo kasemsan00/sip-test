@@ -360,7 +360,6 @@ export default function SipMain() {
     callOutRef.current.innerText = "Call " + destination;
     callOutRef.current.classList.replace("hidden", "fixed");
     sipCall();
-    console.log("🚀 ~ file: SipMain.js ~ line 283 ~ handleCall ~ sipCall", sipCall);
   };
   const handleHangUp = async () => {
     try {

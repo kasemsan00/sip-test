@@ -232,7 +232,7 @@ export default function SipMain() {
       });
       newSession.on("sdp", (event) => {
         event.sdp = event.sdp.replace("SAVPF", "AVPF");
-        event.sdp = event.sdp.replace("SAVPF", "AVPF");
+        // event.sdp = event.sdp.replace("SAVPF", "AVPF");
         console.log(event.sdp);
       });
       newSession.on("peerconnection", function (ev2) {

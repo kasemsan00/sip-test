@@ -231,7 +231,7 @@ export default function SipMain() {
         console.log(event);
       });
       newSession.on("sdp", (event) => {
-        event.sdp = event.sdp.replace("SAVPF", "AVPF");
+        // event.sdp = event.sdp.replace("SAVPF", "AVPF");
         // event.sdp = event.sdp.replace("SAVPF", "AVPF");
         console.log(event.sdp);
       });

@@ -29,12 +29,12 @@ export default function ChangeProfile() {
       className="select select-bordered select-xs max-w-[200px] min-w-[200px]"
       value={profileSelect}
       onChange={(event) => handleProfileChange(event)}
-      disabled={status === "" || status === "disconnected" ? false : true}
+      disabled={!(status === "" || status === "disconnected")}
     >
       {Object.keys(profileData).map((profileName, index) => {
         return (
           <option key={index} value={profileName}>
-            {profileName + " (" + profileData[profileName].extension + "@" + profileData[profileName].server + ")"}
+            {profileData[profileName].extension + "@" + profileData[profileName].server + ")"}
           </option>
         );
       })}

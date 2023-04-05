@@ -109,7 +109,7 @@ export default function SipInput({
           </button>
         ) : (
           <button
-            className={`btn btn-error w-full btn-sm ${status === "unregistered" ? "loading btn-disabled" : ""}`}
+            className={`btn btn-error w-full ${status === "unregistered" ? "loading btn-disabled" : ""}`}
             disabled={!isRegister}
             onClick={handleUnRegister}
           >

@@ -153,6 +153,10 @@ export default function SipInput({
         onChange={(event) => setText(event.target.value)}
         onKeyDown={handleKeyDown}
       />
+      <div className="fixed bottom-0 text-xs">
+        Library
+        JsSIP
+      </div>
     </div>
   );
 }

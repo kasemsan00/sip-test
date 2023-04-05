@@ -124,7 +124,7 @@ export default function SipInput({
       <Form className="w-full mb-2">
         <InputGroup className="w-full">
           <span>
-            <DialerSipIcon />
+            <DialerSipIcon className="text-green-800" />
           </span>
           <Input
             type="text"

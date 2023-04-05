@@ -98,13 +98,13 @@ export default function SipInput({
           handleMutedMicrophone={handleMutedMicrophone}
         />
       </div>
-      <div className="form-control w-full flex flex-row">
+      <div className="form-control w-full flex flex-row align-middle">
         <ChangeProfile />
         <SettingModal />
       </div>
       <div className="form-control w-full flex my-2">
         {!isRegister ? (
-          <button className="btn btn-info w-full btn-sm" disabled={isRegister} onClick={handleRegister}>
+          <button className="btn btn-info w-full" disabled={isRegister} onClick={handleRegister}>
             Register
           </button>
         ) : (

@@ -26,7 +26,7 @@ export default function ChangeProfile() {
 
   return (
     <select
-      className="select select-bordered select-xs max-w-[200px] min-w-[200px]"
+      className="select select-bordered select-md max-w-[200px] min-w-[200px]"
       value={profileSelect}
       onChange={(event) => handleProfileChange(event)}
       disabled={!(status === "" || status === "disconnected")}

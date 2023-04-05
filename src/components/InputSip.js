@@ -98,7 +98,7 @@ export default function SipInput({
           handleMutedMicrophone={handleMutedMicrophone}
         />
       </div>
-      <div className="form-control w-full flex flex-row align-middle">
+      <div className="form-control w-full flex flex-row items-center">
         <ChangeProfile />
         <SettingModal />
       </div>

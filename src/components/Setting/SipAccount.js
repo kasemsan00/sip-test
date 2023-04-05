@@ -17,7 +17,6 @@ export default function SipAccounts({ visible }) {
 
   useEffect(() => {
     if (registerData.length === 0 && localStorage.getItem("profileData") !== null) {
-      console.log("initial profile");
       const initData = JSON.parse(localStorage.getItem("profileData"));
       setRegisterData(JSON.parse(localStorage.getItem("profileData")));
       setRegisterDetail(initData[selectProfile]);

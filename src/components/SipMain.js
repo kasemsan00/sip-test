@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { isChrome, isFirefox, isIOS, isSafari } from "react-device-detect";
 import JsSIP from "jssip";
+JsSIP.debug.enable('JsSIP:*');
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";

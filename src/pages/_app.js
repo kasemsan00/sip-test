@@ -1,4 +1,4 @@
-import "./assets/style.css";
+import "../assets/style.css";
 import { Provider } from "react-redux";
 import store from "../redux/store";
 

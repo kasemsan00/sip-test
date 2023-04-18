@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { setLocalStream } from "../redux/slices/mediaStreamSlice";
+import { setLocalStream } from "../../redux/slices/mediaStreamSlice";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import MicIcon from "@mui/icons-material/Mic";

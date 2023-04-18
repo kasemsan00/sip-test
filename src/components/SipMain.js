@@ -3,13 +3,15 @@ import { isChrome, isFirefox, isIOS, isSafari } from "react-device-detect";
 import JsSIP from "jssip";
 // JsSIP.debug.enable('JsSIP:*');
 import InputSip from "./InputSip";
-import ViewVideo from "./ViewVideo";
+import ViewVideo from "./Video/ViewVideo";
 import IncomingCall from "./IncomingCall";
 import { useDispatch, useSelector } from "react-redux";
 import { setRegisterStatus } from "../redux/slices/registerStatusSlice";
 // import CodecHandler from "../middleware/CodecHandler";
 import { setProxyPassword, setProxyServer, setProxyUrl, setProxyUsername } from "../redux/slices/proxyServerSlice";
 import { setBundlePolicy, setIceCandidatePoolSize, setIceTransportPolicy, setRtcpMuxPolicy } from "../redux/slices/pcConfigSlice";
+import SideBar from "./layouts/Sidebar";
+import DisplayBar from "./layouts/DisplayBar";
 
 let userAgent = null;
 let newSession = null;
@@ -29,6 +31,12 @@ export default function SipMain() {
   const [sessionData, setSessionData] = useState([]);
   const [remoteStream, setRemoteStream] = useState([]);
   const [localVideoStatus, setLocalVideoStatus] = useState({ video: false, audio: false });
+
+  const [count, setCount] = useState(0);
+
+  const HandleCount = () => {
+    setCount(count + 1);
+  };
 
   useEffect(() => {
     if (localStorage.getItem("destination") !== null) {
@@ -90,6 +98,7 @@ export default function SipMain() {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log("Check Browser");
     const table = {
       iOS: isIOS,
       Safari: isSafari,
@@ -158,37 +167,37 @@ export default function SipMain() {
 
       if (ev1.originator === "local") {
         newSession.connection.addEventListener("addstream", (event) => {
-          if (isChrome) {
-            console.log("Browser Google Chrome");
-            const transceiverSender = event.currentTarget
-              .getTransceivers()
-              .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
-            const codecs = [
-              {
-                clockRate: 90000,
-                mimeType: "video/H264",
-                sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=2;profile-level-id=42001f",
-              },
-            ];
-            console.log("setCodec", codecs);
-            transceiverSender.setCodecPreferences(codecs);
-
-            const transceiverReceiver = event.currentTarget.getTransceivers().find((t) => {
-              console.log(t);
-              console.log(t.receiver);
-            });
-            // transceiverReceiver.setCodecPreferences(codecs);
-            console.log("transceiverReceiver", transceiverReceiver);
-          }
-
-          setRemoteStream((remoteStream) => [
-            ...remoteStream,
-            {
-              callID: callID,
-              stream: event.stream,
-              steamAudio: null,
-            },
-          ]);
+          //   if (isChrome) {
+          //     console.log("Browser Google Chrome");
+          //     const transceiverSender = event.currentTarget
+          //       .getTransceivers()
+          //       .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+          //     const codecs = [
+          //       {
+          //         clockRate: 90000,
+          //         mimeType: "video/H264",
+          //         sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42001f",
+          //       },
+          //     ];
+          //     console.log("setCodec", codecs);
+          //     transceiverSender.setCodecPreferences(codecs);
+          //
+          //     const transceiverReceiver = event.currentTarget.getTransceivers().find((t) => {
+          //       console.log(t);
+          //       console.log(t.receiver);
+          //     });
+          //     // transceiverReceiver.setCodecPreferences(codecs);
+          //     console.log("transceiverReceiver", transceiverReceiver);
+          //   }
+          //
+          //   setRemoteStream((remoteStream) => [
+          //     ...remoteStream,
+          //     {
+          //       callID: callID,
+          //       stream: event.stream,
+          //       steamAudio: null,
+          //     },
+          //   ]);
         });
       } else if (ev1.originator === "remote") {
         view = true;
@@ -427,7 +436,7 @@ export default function SipMain() {
 
   return (
     <>
-      <div className="flex flex-row w-screen h-screen bg-slate-200 shadow-xl overflow-hidden">
+      <SideBar>
         <InputSip
           handleRegister={handleRegister}
           handleUnRegister={handleUnRegister}
@@ -443,8 +452,8 @@ export default function SipMain() {
           sendMessage={sendMessage}
         />
         <ViewVideo callOutRef={callOutRef} sessionData={sessionData} remoteStream={remoteStream} />
-      </div>
-      <div className="fixed flex top-10 w-full justify-center ">
+      </SideBar>
+      <DisplayBar>
         {sessionData.map((incoming, index) => {
           return (
             <IncomingCall
@@ -457,7 +466,7 @@ export default function SipMain() {
             />
           );
         })}
-      </div>
+      </DisplayBar>
     </>
   );
 }

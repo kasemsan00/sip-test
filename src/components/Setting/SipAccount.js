@@ -24,7 +24,6 @@ export default function SipAccounts({ visible }) {
   }, [selectProfile, registerData]);
 
   const handleRegisterDetailChange = (type, value) => {
-    console.log(value);
     setRegisterDetail((prevState) => ({ ...prevState, [type]: value }));
     setRegisterData({
       ...registerData,

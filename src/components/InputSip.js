@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Form, InputGroup, Input, Radio } from "react-daisyui";
 import DialerSipIcon from "@mui/icons-material/DialerSip";
-import ViewLocal from "./ViewLocal";
+import ViewLocal from "./Video/ViewLocal";
 import SettingModal from "./Setting/SettingModel";
 import ChangeProfile from "./ChangeProfile";
 import RegisterStatus from "./RegisterStatus";
@@ -80,13 +80,6 @@ export default function SipInput({
     }
   }, [status]);
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      sendMessage(text);
-      setText("");
-    }
-  };
-
   return (
     <div className="flex w-[250px] px-3 h-full flex-col items-center self-start ">
       <div className="form-control w-full mb-2">
@@ -150,7 +143,12 @@ export default function SipInput({
         type="text"
         value={text}
         onChange={(event) => setText(event.target.value)}
-        onKeyDown={handleKeyDown}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            sendMessage(text);
+            setText("");
+          }
+        }}
       />
       <div className="fixed bottom-0 text-xs">Library JsSIP</div>
     </div>

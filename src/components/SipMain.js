@@ -158,28 +158,28 @@ export default function SipMain() {
 
       if (ev1.originator === "local") {
         newSession.connection.addEventListener("addstream", (event) => {
-          // if (isChrome) {
-          //   console.log("Browser Google Chrome");
-          //   const transceiverSender = event.currentTarget
-          //     .getTransceivers()
-          //     .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
-          //   const codecs = [
-          //     {
-          //       clockRate: 90000,
-          //       mimeType: "video/H264",
-          //       sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42001f",
-          //     },
-          //   ];
-          //   console.log("setCodec", codecs);
-          //   transceiverSender.setCodecPreferences(codecs);
-          //
-          //   const transceiverReceiver = event.currentTarget.getTransceivers().find((t) => {
-          //     console.log(t);
-          //     console.log(t.receiver);
-          //   });
-          //   // transceiverReceiver.setCodecPreferences(codecs);
-          //   console.log("transceiverReceiver", transceiverReceiver);
-          // }
+          if (isChrome) {
+            console.log("Browser Google Chrome");
+            const transceiverSender = event.currentTarget
+              .getTransceivers()
+              .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+            const codecs = [
+              {
+                clockRate: 90000,
+                mimeType: "video/H264",
+                sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=2;profile-level-id=42001f",
+              },
+            ];
+            console.log("setCodec", codecs);
+            transceiverSender.setCodecPreferences(codecs);
+
+            const transceiverReceiver = event.currentTarget.getTransceivers().find((t) => {
+              console.log(t);
+              console.log(t.receiver);
+            });
+            // transceiverReceiver.setCodecPreferences(codecs);
+            console.log("transceiverReceiver", transceiverReceiver);
+          }
 
           setRemoteStream((remoteStream) => [
             ...remoteStream,

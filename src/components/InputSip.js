@@ -55,13 +55,13 @@ export default function SipInput({
   useEffect(() => {
     const supportsSetCodecPreferences = window.RTCRtpTransceiver && "setCodecPreferences" in window.RTCRtpTransceiver.prototype;
     console.log("supportsSetCodecPreferences", supportsSetCodecPreferences);
-    // console.log(RTCRtpSender.getCapabilities("video"));
-    // const { codecs } = RTCRtpSender.getCapabilities("video");
-    // console.log(codecs);
     if (supportsSetCodecPreferences) {
       const codecStack = [];
       const { codecs } = RTCRtpSender.getCapabilities("video");
       console.table(codecs);
+      codecs.forEach((codec) => {
+        console.log(codec);
+      });
       codecs.forEach((codec) => {
         if (["video/red", "video/ulpfec", "video/rtx"].includes(codec.mimeType)) {
           return;
@@ -144,7 +144,7 @@ export default function SipInput({
       <button className="btn btn-info w-full m-1" onClick={handleRenegotiate}>
         Renegotiate
       </button>
-      {/* <SelectCodec codecSupport={codecSupport} /> */}
+      <SelectCodec codecSupport={codecSupport} />
       <input
         className="input input-bordered w-full m-1 outline-0"
         type="text"
@@ -152,10 +152,7 @@ export default function SipInput({
         onChange={(event) => setText(event.target.value)}
         onKeyDown={handleKeyDown}
       />
-      <div className="fixed bottom-0 text-xs">
-        Library
-        JsSIP
-      </div>
+      <div className="fixed bottom-0 text-xs">Library JsSIP</div>
     </div>
   );
 }

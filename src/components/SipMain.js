@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { isChrome, isFirefox, isIOS, isSafari } from "react-device-detect";
 import JsSIP from "jssip";
-JsSIP.debug.enable('JsSIP:*');
+// JsSIP.debug.enable('JsSIP:*');
 import InputSip from "./InputSip";
 import ViewVideo from "./ViewVideo";
 import IncomingCall from "./IncomingCall";
@@ -146,40 +146,40 @@ export default function SipMain() {
 
       newSession = ev1.session;
 
+      newSession.on("icecandidate", function (data) {
+        self.count_icecandidate++;
+        let that = this;
+        if (self.count_icecandidate > 2) {
+          data.ready(function (e) {
+            that.emit("sdp", e);
+          });
+        }
+      });
+
       if (ev1.originator === "local") {
         newSession.connection.addEventListener("addstream", (event) => {
-          console.log("SetCodec");
-          // if (isSafari) {
-          //   const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
-          //   const codecs = [
-          //     {
-          //       clockRate: 90000,
-          //       mimeType: "video/H264",
-          //       sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
-          //     },
-          //   ];
-          //   console.log("setCodec", codecs);
-          //   transceiver.setCodecPreferences(codecs);
-          // }
           // if (isChrome) {
-          //   const transceiver = event.currentTarget.getTransceivers().find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
+          //   console.log("Browser Google Chrome");
+          //   const transceiverSender = event.currentTarget
+          //     .getTransceivers()
+          //     .find((t) => t.sender && t.sender.track === mediaStream.getVideoTracks()[0]);
           //   const codecs = [
           //     {
           //       clockRate: 90000,
           //       mimeType: "video/H264",
-          //       sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f",
+          //       sdpFmtpLine: "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42001f",
           //     },
           //   ];
           //   console.log("setCodec", codecs);
-          //   transceiver.setCodecPreferences(codecs);
+          //   transceiverSender.setCodecPreferences(codecs);
+          //
+          //   const transceiverReceiver = event.currentTarget.getTransceivers().find((t) => {
+          //     console.log(t);
+          //     console.log(t.receiver);
+          //   });
+          //   // transceiverReceiver.setCodecPreferences(codecs);
+          //   console.log("transceiverReceiver", transceiverReceiver);
           // }
-
-          // const video_track = event.stream.getVideoTracks()[0];
-          // const audio_track = event.stream.getAudioTracks()[0];
-          // let testVideoMediaStream = new MediaStream();
-          // testVideoMediaStream.addTrack(video_track);
-          // let testAudioMediaStream = new MediaStream();
-          // testAudioMediaStream.addTrack(audio_track);
 
           setRemoteStream((remoteStream) => [
             ...remoteStream,
@@ -296,9 +296,12 @@ export default function SipMain() {
       },
       peerconnection: (pc) => {
         console.log(pc.peerconnection);
-        // const transceiver = pc.peerconnection.getTransceivers().find((t) => t.sender && t.sender.track === localStream.getVideoTracks()[0]);
-        // console.log(pc.peerconnection);
-        // transceiver.setCodecPreferences(localStorage.getItem("codec"));
+        const transceiver = pc.peerconnection.getTransceivers().find((t) => t.sender && t.sender.track === localStream.getVideoTracks()[0]);
+        const storageCodec = localStorage.getItem("codec");
+        // if (storageCodec !== null) {
+        //   console.log("setCodecPreferences", storageCodec);
+        //   transceiver.setCodecPreferences(storageCodec);
+        // }
       },
     };
 
@@ -334,7 +337,6 @@ export default function SipMain() {
       iceTransportPolicy: "all",
       rtcpMuxPolicy: pcConfigSetting.rtcpMuxPolicy,
       bundlePolicy: pcConfigSetting.bundlePolicy,
-      gatheringTimeout: 2000,
       iceCandidatePoolSize: 0,
     };
   };
